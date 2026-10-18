@@ -16,6 +16,26 @@ Accounts payable workflows handle high volumes of variable-format supplier invoi
 
 ---
 
+## Where InVoice Fits: AI Pipelines vs. Agentic AI
+
+InVoice AI is the **fixed-pipeline track of a broader exploration into AI pipelines versus genuinely agentic systems**.
+
+The goal is to understand not just how to integrate AI into an application, but also how the way an AI system is orchestrated affects its behavior, control, and reliability.
+
+InVoice follows a developer-defined sequence of stages:
+
+**Document Understanding → Deterministic Analysis → AI Review → Human Decision**
+
+Each stage has a defined responsibility, and the application controls the order in which the stages execute. LLMs handle document understanding and evidence interpretation, while deterministic application code performs financial validation and manages the workflow.
+
+This is intentional. InVoice is not designed to be an autonomous agent that independently chooses its next actions or replans its workflow. Instead, it provides a practical example of a structured AI pipeline with explicit boundaries, verifiable calculations, and human oversight.
+
+A separate companion project explores the agentic approach, where a system works toward a goal by selecting tools and actions, observing results, and adapting its next steps within defined constraints.
+
+Together, these projects provide a practical learning opportunity to examine the difference between **AI used within a predefined workflow** and **AI that dynamically determines how to pursue a goal**. The focus is on understanding the architectural trade-offs, not claiming that one approach is universally better than the other.
+
+---
+
 ## Problem Statement
 
 Accounts payable teams processing recurring supplier invoices face recurring operational challenges:
@@ -212,7 +232,7 @@ The lower section surfaces duplicate invoice alerts, same-vendor historical base
 
 ## Key Learnings
 
-Developing InVoice AI provided practical engineering insights into AI-software integration and financial system design:
+Developing InVoice AI provided practical experience with structured AI pipelines, deterministic validation, and human-in-the-loop system design. It also establishes the pipeline side of a broader exploration into how predefined AI workflows differ from systems that dynamically plan and select actions.
 
 * **Strict Boundary Separation (Perception vs. Computation)**: Generative models excel at extracting semantics from arbitrary visual layouts, but fail unpredictably at basic arithmetic. Enforcing a strict architectural boundary—where the LLM produces structured data and deterministic code computes all totals—guarantees mathematical consistency while retaining layout flexibility.
 * **Eliminating Baseline Contamination**: Historical baselines must exclude identical re-submissions. If a duplicate invoice is ingested into the comparison pool, it dilutes variance thresholds and obscures genuine price creep. Isolating baselines to same-vendor, prior-dated records protects audit integrity.
