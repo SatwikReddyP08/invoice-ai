@@ -155,24 +155,6 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-.method-badge {
-  font-size: 0.75rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 12px;
-  font-weight: 700;
-}
-
-.method-badge.llm {
-  background: rgba(99, 102, 241, 0.15);
-  color: #818cf8;
-  border: 1px solid rgba(99, 102, 241, 0.3);
-}
-
-.method-badge.non-llm {
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
-}
 
 .rec-badge {
   font-size: 0.75rem;

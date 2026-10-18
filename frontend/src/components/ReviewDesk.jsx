@@ -143,7 +143,6 @@ const ReviewDesk = ({ onSelectInvoice }) => {
                 <th>Customer</th>
                 <th>Date</th>
                 <th>Amount</th>
-                <th>Mode</th>
                 <th>AI Review</th>
                 <th>Human Disposition</th>
                 <th>Action</th>
@@ -151,8 +150,6 @@ const ReviewDesk = ({ onSelectInvoice }) => {
             </thead>
             <tbody>
               {invoices.map((inv) => {
-                const extractionMeta = inv.extraction_metadata || inv.review_result?.extraction_metadata || inv.financial_validation?.extraction_metadata;
-                const isNonLLM = extractionMeta?.extraction_method === 'NON_LLM';
                 const rr = inv.review_result || {};
                 const rec = rr.review_recommendation;
                 const humanDisp = inv.human_disposition || rr.human_disposition;
@@ -167,11 +164,6 @@ const ReviewDesk = ({ onSelectInvoice }) => {
                     <td>{formatDate(inv.invoice_date)}</td>
                     <td style={{ fontWeight: 600 }}>
                       {formatCurrency(inv.total_amount, inv.currency)}
-                    </td>
-                    <td>
-                      <span className={`method-badge ${isNonLLM ? 'non-llm' : 'llm'}`}>
-                        {isNonLLM ? 'Non-LLM' : 'LLM Vision'}
-                      </span>
                     </td>
                     <td>
                       <span className={`rec-badge ${rec === 'REVIEW_RECOMMENDED' ? 'recommended' : (rec === 'NO_ACTION_REQUIRED' ? 'normal' : 'insufficient')}`}>

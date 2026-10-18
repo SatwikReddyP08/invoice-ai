@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './UploadInvoice.css';
 import InvoiceResults from './InvoiceResults';
-import ExtractionComparison from './ExtractionComparison';
 
 const UploadInvoice = () => {
   const [file, setFile] = useState(null);
@@ -13,9 +12,6 @@ const UploadInvoice = () => {
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractionError, setExtractionError] = useState(null);
   const [extractedData, setExtractedData] = useState(null);
-
-  const [extractionMode, setExtractionMode] = useState('llm'); // 'llm' | 'non_llm' | 'compare'
-  const [comparisonData, setComparisonData] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -37,7 +33,6 @@ const UploadInvoice = () => {
     setSuccessData(null);
     setExtractionError(null);
     setExtractedData(null);
-    setComparisonData(null);
 
     if (!selectedFile) return false;
 
@@ -91,7 +86,6 @@ const UploadInvoice = () => {
     setSuccessData(null);
     setExtractionError(null);
     setExtractedData(null);
-    setComparisonData(null);
 
     const formData = new FormData();
     formData.append('file', file);
@@ -118,36 +112,14 @@ const UploadInvoice = () => {
     }
   };
 
-  const handleExtract = async (overrideMode) => {
+  const handleExtract = async () => {
     if (!successData || !successData.invoice_id) return;
-    const modeToRun = overrideMode || extractionMode;
 
     setIsExtracting(true);
     setExtractionError(null);
 
-    if (modeToRun === 'compare') {
-      try {
-        const response = await fetch(`/api/v1/invoices/${successData.invoice_id}/compare`, {
-          method: 'POST'
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Failed to execute extraction comparison');
-        }
-
-        const compResult = await response.json();
-        setComparisonData(compResult);
-      } catch (err) {
-        setExtractionError(err.message || 'Comparison failed.');
-      } finally {
-        setIsExtracting(false);
-      }
-      return;
-    }
-
     try {
-      const response = await fetch(`/api/v1/invoices/${successData.invoice_id}/extract?mode=${modeToRun}`, {
+      const response = await fetch(`/api/v1/invoices/${successData.invoice_id}/extract`, {
         method: 'POST'
       });
 
@@ -158,9 +130,8 @@ const UploadInvoice = () => {
 
       const data = await response.json();
       setExtractedData(data);
-      setComparisonData(null);
     } catch (err) {
-      setExtractionError(err.message || 'An unexpected error occurred during extraction.');
+      setExtractionError(err.message || 'An unexpected error occurred during invoice processing.');
     } finally {
       setIsExtracting(false);
     }
@@ -170,21 +141,9 @@ const UploadInvoice = () => {
     setFile(null);
     setSuccessData(null);
     setExtractedData(null);
-    setComparisonData(null);
     setError(null);
     setExtractionError(null);
-    setExtractionMode('llm');
   };
-
-  if (comparisonData) {
-    return (
-      <ExtractionComparison
-        comparisonData={comparisonData}
-        onProceedWithMode={(mode) => handleExtract(mode)}
-        onBack={() => setComparisonData(null)}
-      />
-    );
-  }
 
   if (extractedData) {
     return <InvoiceResults data={extractedData} onReset={resetFlow} />;
@@ -244,95 +203,26 @@ const UploadInvoice = () => {
 
       {successData && (
         <div className="message-box success">
-          <h4>Upload Successful!</h4>
-          <p><strong>Invoice ID:</strong> {successData.invoice_id}</p>
+          <h4>Upload Successful</h4>
+          <p><strong>Invoice ID:</strong> #{successData.invoice_id}</p>
           <p><strong>Filename:</strong> {successData.original_filename}</p>
-          <p><strong>Status:</strong> {successData.status}</p>
+          <p><strong>Initial Status:</strong> {successData.status}</p>
           
-          <div className="extract-actions" style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(16, 185, 129, 0.3)' }}>
-            <p style={{ marginBottom: '1rem', color: '#f8fafc', fontWeight: 500 }}>
-              Select Document Extraction Architecture:
+          <div className="extract-actions" style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(16, 185, 129, 0.3)' }}>
+            <p style={{ marginBottom: '1rem', color: '#e2e8f0', fontSize: '0.92rem' }}>
+              Document is staged and ready for the multi-stage AI pipeline (Document Understanding → Deterministic Financial Analysis → AI Invoice Review).
             </p>
-            
-            <div className="mode-selector-container">
-              {/* Option 1: LLM Assisted */}
-              <label className={`mode-card ${extractionMode === 'llm' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="extraction_mode"
-                  value="llm"
-                  checked={extractionMode === 'llm'}
-                  onChange={() => setExtractionMode('llm')}
-                  disabled={isExtracting}
-                />
-                <div className="mode-card-content">
-                  <div className="mode-card-title-row">
-                    <span className="mode-card-title">LLM-Assisted Extraction</span>
-                    <span className="mode-tag primary">Production Primary</span>
-                  </div>
-                  <p className="mode-card-desc">
-                    Multi-modal vision model via Groq API (<code>qwen/qwen3.8-27b</code>). Handles complex, digital, and scanned layouts.
-                  </p>
-                </div>
-              </label>
-
-              {/* Option 2: Non-LLM */}
-              <label className={`mode-card ${extractionMode === 'non_llm' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="extraction_mode"
-                  value="non_llm"
-                  checked={extractionMode === 'non_llm'}
-                  onChange={() => setExtractionMode('non_llm')}
-                  disabled={isExtracting}
-                />
-                <div className="mode-card-content">
-                  <div className="mode-card-title-row">
-                    <span className="mode-card-title">Non-LLM Deterministic Parser</span>
-                    <span className="mode-tag experimental">Experimental Local</span>
-                  </div>
-                  <p className="mode-card-desc">
-                    Spatial layout and coordinate table parser via PyMuPDF. Ultra-fast local execution with zero API cost. Requires digital text.
-                  </p>
-                </div>
-              </label>
-
-              {/* Option 3: Compare Both */}
-              <label className={`mode-card ${extractionMode === 'compare' ? 'selected' : ''}`}>
-                <input
-                  type="radio"
-                  name="extraction_mode"
-                  value="compare"
-                  checked={extractionMode === 'compare'}
-                  onChange={() => setExtractionMode('compare')}
-                  disabled={isExtracting}
-                />
-                <div className="mode-card-content">
-                  <div className="mode-card-title-row">
-                    <span className="mode-card-title">Side-by-Side Comparison</span>
-                    <span className="mode-tag compare">Audit & Benchmark</span>
-                  </div>
-                  <p className="mode-card-desc">
-                    Runs both extraction engines on this document. Inspect header agreement, line-item alignment, and latency side by side.
-                  </p>
-                </div>
-              </label>
-            </div>
 
             <button 
               className="upload-btn" 
-              onClick={() => handleExtract()} 
+              onClick={handleExtract} 
               disabled={isExtracting}
-              style={{ width: '100%', marginTop: '0.75rem' }}
+              style={{ width: '100%' }}
             >
               {isExtracting ? (
-                <><span className="loading-spinner"></span> {extractionMode === 'compare' ? 'Running Side-by-Side Comparison...' : 'Extracting Invoice Data...'}</>
+                <><span className="loading-spinner"></span> Processing AI Pipeline...</>
               ) : (
-                extractionMode === 'compare'
-                  ? 'Run Side-by-Side Comparison'
-                  : extractionMode === 'non_llm'
-                  ? 'Process Invoice (Non-LLM Experimental)'
-                  : 'Process Invoice (LLM-Assisted)'
+                'Process Invoice'
               )}
             </button>
           </div>
@@ -341,7 +231,7 @@ const UploadInvoice = () => {
 
       {extractionError && (
         <div className="message-box error" style={{ marginTop: '1rem' }}>
-          <h4>Extraction Failed</h4>
+          <h4>Pipeline Processing Failed</h4>
           <p>{extractionError}</p>
         </div>
       )}

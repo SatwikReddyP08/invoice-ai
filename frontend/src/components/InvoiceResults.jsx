@@ -94,10 +94,6 @@ const InvoiceResults = ({ data, onReset }) => {
   const isSuccess = pipeline === 'SUCCESS';
   
   const extractionMeta = currentData.extraction_metadata || currentData.review_result?.extraction_metadata || currentData.financial_validation?.extraction_metadata;
-  const isNonLLM = extractionMeta?.extraction_method === 'NON_LLM';
-  const extractionMethodLabel = isNonLLM
-    ? 'Non-LLM (Deterministic PyMuPDF Engine - Experimental)'
-    : 'LLM-Assisted (Groq / Qwen Vision - Production Primary)';
   const humanDisp = currentData.human_disposition || currentData.review_result?.human_disposition;
 
   return (
@@ -109,7 +105,7 @@ const InvoiceResults = ({ data, onReset }) => {
             <span className="step-icon">{isSuccess ? '✓' : '○'}</span>
             <div className="step-content">
               <h4>1. Document Understanding</h4>
-              <p>{isNonLLM ? 'PyMuPDF layout extraction' : 'Groq/Qwen vision extraction'}</p>
+              <p>Groq / Qwen Vision Extraction</p>
             </div>
           </div>
           <div className="step-connector">↓</div>
@@ -142,12 +138,12 @@ const InvoiceResults = ({ data, onReset }) => {
         <div>
           <h2 style={{ margin: 0 }}>Invoice #{currentData.invoice_number || currentData.id}</h2>
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.4rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.82rem', padding: '0.2rem 0.6rem', borderRadius: '12px', background: isNonLLM ? 'rgba(168, 85, 247, 0.15)' : 'rgba(99, 102, 241, 0.15)', color: isNonLLM ? '#c084fc' : '#818cf8', border: isNonLLM ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(99, 102, 241, 0.3)', fontWeight: 600 }}>
-              Mode: {extractionMethodLabel}
+            <span style={{ fontSize: '0.82rem', padding: '0.2rem 0.6rem', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', border: '1px solid rgba(99, 102, 241, 0.3)', fontWeight: 600 }}>
+              Fixed AI Pipeline
             </span>
             {extractionMeta?.processing_time_seconds && (
               <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                ({extractionMeta.processing_time_seconds}s)
+                Extraction latency: {extractionMeta.processing_time_seconds}s
               </span>
             )}
           </div>

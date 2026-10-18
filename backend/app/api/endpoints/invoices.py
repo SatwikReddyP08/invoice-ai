@@ -20,11 +20,9 @@ from app.services.ai_extractor import extract_invoice
 from app.services.financial_analysis import analyze_financials
 from app.services.historical_analysis import analyze_history
 from app.services.ai_review import review_invoice_with_llm
-from app.services.extraction_dispatcher import dispatch_extraction, run_extraction_comparison
-from app.services.non_llm_extractor import NonLLMExtractionError
-from app.schemas.comparison import ExtractionComparisonResponse
 from app.core.config import settings
 from datetime import datetime, timezone
+import time
 import logging
 
 logger = logging.getLogger(__name__)
@@ -97,10 +95,9 @@ def update_invoice(invoice_id: int, invoice_in: InvoiceUpdate, db: Session = Dep
 @router.post("/{invoice_id}/extract", response_model=InvoiceResponse)
 def extract_invoice_data(
     invoice_id: int, 
-    mode: str = "llm",
     db: Session = Depends(get_db)
 ) -> Any:
-    """Extract data from uploaded invoice document using selectable mode ('llm' or 'non_llm')."""
+    """Extract data and execute full multi-stage AI pipeline for the uploaded invoice document."""
     invoice = crud_invoice.get_invoice(db=db, invoice_id=invoice_id)
     if not invoice:
         raise HTTPException(status_code=404, detail="Invoice not found")
@@ -109,8 +106,6 @@ def extract_invoice_data(
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Invoice source file not found")
         
-    # If we already have extracted data but reviewing failed, we could allow skipping extraction.
-    # But for simplicity, if it's PENDING or FAILED, we do the full pipeline.
     if invoice.pipeline_status in (PipelineStatus.EXTRACTING, PipelineStatus.ANALYZING, PipelineStatus.REVIEWING):
         raise HTTPException(status_code=400, detail="Invoice is currently being processed")
         
@@ -125,12 +120,19 @@ def extract_invoice_data(
     extraction_meta = None
     if not has_prior_successful_extraction and invoice.pipeline_status in (PipelineStatus.PENDING, PipelineStatus.FAILED):
         try:
-            # STAGE 1 — Extraction via Dispatcher (LLM-assisted or Non-LLM)
+            # STAGE 1 — Document Understanding (LLM-Assisted Vision via Groq)
             invoice.pipeline_status = PipelineStatus.EXTRACTING
             invoice.extraction_started_at = datetime.now(timezone.utc)
             db.commit()
             
-            extracted_data, extraction_meta = dispatch_extraction(file_path, mode=mode)
+            t0 = time.time()
+            extracted_data = extract_invoice(file_path)
+            elapsed = round(time.time() - t0, 4)
+            extraction_meta = {
+                "extraction_method": "LLM_ASSISTED",
+                "provenance": f"Groq Vision API ({settings.GROQ_MODEL})",
+                "processing_time_seconds": elapsed
+            }
             invoice.extraction_completed_at = datetime.now(timezone.utc)
             
             # Save Stage 1 results immediately so they are persisted if Stage 3 fails later
@@ -148,12 +150,6 @@ def extract_invoice_data(
                 items=items_data
             )
             invoice = crud_invoice.update_invoice(db=db, db_invoice=invoice, invoice_in=update_data)
-        except NonLLMExtractionError as e:
-            logger.warning(f"NonLLMExtractionError on invoice {invoice_id}: {e}")
-            db.rollback()
-            invoice.pipeline_status = PipelineStatus.FAILED
-            db.commit()
-            raise HTTPException(status_code=422, detail=str(e))
         except Exception as e:
             logger.exception(f"Stage 1 Extraction failed on invoice {invoice_id}: {e}")
             db.rollback()
@@ -197,7 +193,7 @@ def extract_invoice_data(
         invoice.historical_context = historical_context
         db.commit()
         
-        # STAGE 3 — AI Review (remains LLM-based for both modes)
+        # STAGE 3 — AI Review (remains LLM-based)
         invoice.pipeline_status = PipelineStatus.REVIEWING
         invoice.review_started_at = datetime.now(timezone.utc)
         db.commit()
@@ -226,26 +222,6 @@ def extract_invoice_data(
         invoice.pipeline_status = PipelineStatus.FAILED
         db.commit()
         raise HTTPException(status_code=500, detail=f"Pipeline failed at Stage 2/3: {str(e)}")
-
-@router.post("/{invoice_id}/compare", response_model=ExtractionComparisonResponse)
-def compare_invoice_extraction(invoice_id: int, db: Session = Depends(get_db)) -> Any:
-    """
-    Run side-by-side comparison of LLM-assisted vs. Non-LLM extraction on the document.
-    Does not create duplicate database records or alter historical baselines.
-    """
-    invoice = crud_invoice.get_invoice(db=db, invoice_id=invoice_id)
-    if not invoice:
-        raise HTTPException(status_code=404, detail="Invoice not found")
-        
-    file_path = os.path.join(settings.STORAGE_DIR, invoice.source_file_path)
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="Invoice source file not found")
-        
-    try:
-        comparison_res = run_extraction_comparison(file_path=file_path, invoice_id=invoice_id)
-        return comparison_res
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Comparison failed: {str(e)}")
 
 @router.post("/{invoice_id}/disposition", response_model=InvoiceResponse)
 def set_invoice_disposition(
