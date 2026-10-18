@@ -180,6 +180,36 @@ An illustrative synthetic audit record is provided in [`docs/sample_audit_report
 
 ---
 
+## Application Walkthrough & Screenshots
+
+### 1. Document Upload & Ingestion
+The landing view provides an intuitive drag-and-drop interface supporting commercial invoice formats (PDF, PNG, JPEG up to 10 MB).
+
+![Document Upload](assets/screenshots/01_upload_landing.png)
+
+---
+
+### 2. Invoice Review Desk (Operational Triage Queues)
+The Review Desk organizes processed documents into dedicated operational queues (`⚠ Needs Attention`, `✓ Completed Reviews`, `ℹ Informational / Normal`, and `All Invoices`), displaying extracted amounts, AI recommendations, reviewer status, and report export actions.
+
+![Invoice Review Desk](assets/screenshots/02_review_desk.png)
+
+---
+
+### 3. Multi-Stage Pipeline & Extraction Validation
+The inspection view displays real-time status across all four pipeline stages, extracted header fields, financial summary cards, and itemized line items with independent arithmetic reconciliation.
+
+![Pipeline & Extraction](assets/screenshots/03_invoice_pipeline_and_extraction.png)
+
+---
+
+### 4. Baseline Analysis, AI Findings & Human Disposition Desk
+The lower section surfaces duplicate invoice alerts, same-vendor historical baseline comparisons, deterministic evidence findings with natural-language synthesis, and the human reviewer disposition desk with downloadable JSON audit reports.
+
+![AI Review & Human Desk](assets/screenshots/04_ai_review_and_human_desk.png)
+
+---
+
 ## Key Learnings
 
 Developing InVoice AI provided practical engineering insights into AI-software integration and financial system design:
