@@ -151,6 +151,18 @@ def analyze_financials(extracted_data: InvoiceExtractionSchema) -> Dict[str, Any
     calculated_total = round_money(effective_subtotal + effective_tax)
     discount_detected: Optional[float] = None
 
+    # Check for authoritatively established uniform tax rate
+    established_tax_rate: Optional[Decimal] = None
+    if subtotal_dec is not None and subtotal_dec > Decimal("0.00") and tax_dec is not None and tax_dec >= Decimal("0.00"):
+        if tax_dec == Decimal("0.00"):
+            established_tax_rate = Decimal("0.0000")
+        else:
+            candidate_ratio = tax_dec / subtotal_dec
+            rounded_rate = candidate_ratio.quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+            expected_tax = round_money(subtotal_dec * rounded_rate)
+            if abs(expected_tax - tax_dec) <= tolerance:
+                established_tax_rate = rounded_rate
+
     if total_dec is not None:
         raw_diff = abs(total_dec - calculated_total)
         total_consistent = raw_diff <= tolerance
@@ -203,5 +215,6 @@ def analyze_financials(extracted_data: InvoiceExtractionSchema) -> Dict[str, Any
         "has_zero_total": has_zero_total,
         "missing_total_amount": missing_total_amount,
         "discount_detected": discount_detected,
+        "established_tax_rate": float(established_tax_rate) if established_tax_rate is not None else None,
         "anomalies": anomalies
     }

@@ -163,19 +163,24 @@ def analyze_history(db: Session, extracted_data: InvoiceExtractionSchema, curren
     is_duplicate_invoice = duplicate_count > 0
 
     if not historical_invoices:
-        msg_parts = ["No historical comparable invoices found (must be same vendor, strictly prior date, matching currency)."]
         if duplicate_count > 0:
-            msg_parts.append(f"{duplicate_count} duplicate invoice(s) excluded.")
-        if same_date_count > 0:
-            msg_parts.append(f"{same_date_count} same-date invoice(s) excluded per same-date policy.")
-        if future_date_count > 0:
-            msg_parts.append(f"{future_date_count} future-dated invoice(s) excluded.")
-        if currency_mismatches_count > 0:
-            msg_parts.append(f"{currency_mismatches_count} invoice(s) excluded due to currency mismatch.")
+            msg = (
+                f"No prior baseline invoices available from {vendor_name}. "
+                f"Previous submission(s) of invoice #{curr_inv_num} were detected and excluded from the price baseline "
+                f"to prevent self-referential bias."
+            )
+        elif same_date_count > 0:
+            msg = f"No strictly prior invoices available from {vendor_name}. {same_date_count} invoice(s) with identical dates were excluded per same-date policy."
+        elif future_date_count > 0:
+            msg = f"No eligible prior invoices available from {vendor_name} ({future_date_count} future-dated invoice(s) excluded)."
+        elif currency_mismatches_count > 0:
+            msg = f"No eligible prior invoices available from {vendor_name} in {current_currency} ({currency_mismatches_count} invoice(s) excluded due to currency mismatch)."
+        else:
+            msg = f"No historical invoices available from {vendor_name} with matching currency."
 
         return {
             "status": "INSUFFICIENT_EVIDENCE",
-            "message": " ".join(msg_parts),
+            "message": msg,
             "is_duplicate_invoice": is_duplicate_invoice,
             "duplicate_invoices_excluded": duplicate_count,
             "same_date_invoices_excluded": same_date_count,

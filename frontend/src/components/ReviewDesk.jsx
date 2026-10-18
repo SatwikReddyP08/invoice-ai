@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './ReviewDesk.css';
 
-const ReviewDesk = ({ onSelectInvoice }) => {
-  const [filter, setFilter] = useState('needs_attention'); // 'needs_attention' | 'completed' | 'informational' | 'all'
+const ReviewDesk = ({ onSelectInvoice, activeFilter = 'needs_attention', onFilterChange }) => {
+  const [filter, setFilter] = useState(activeFilter);
   const [invoices, setInvoices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleTabChange = (newFilter) => {
+    setFilter(newFilter);
+    if (onFilterChange) onFilterChange(newFilter);
+  };
 
   const fetchInvoices = async () => {
     setIsLoading(true);
@@ -89,25 +94,25 @@ const ReviewDesk = ({ onSelectInvoice }) => {
       <div className="queue-filter-tabs">
         <button
           className={`queue-tab ${filter === 'needs_attention' ? 'active attention' : ''}`}
-          onClick={() => setFilter('needs_attention')}
+          onClick={() => handleTabChange('needs_attention')}
         >
           ⚠ Needs Attention
         </button>
         <button
           className={`queue-tab ${filter === 'completed' ? 'active' : ''}`}
-          onClick={() => setFilter('completed')}
+          onClick={() => handleTabChange('completed')}
         >
           ✓ Completed Reviews
         </button>
         <button
           className={`queue-tab ${filter === 'informational' ? 'active' : ''}`}
-          onClick={() => setFilter('informational')}
+          onClick={() => handleTabChange('informational')}
         >
           ℹ Informational / Normal
         </button>
         <button
           className={`queue-tab ${filter === 'all' ? 'active' : ''}`}
-          onClick={() => setFilter('all')}
+          onClick={() => handleTabChange('all')}
         >
           All Invoices
         </button>

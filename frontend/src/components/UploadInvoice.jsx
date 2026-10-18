@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import './UploadInvoice.css';
 import InvoiceResults from './InvoiceResults';
 
-const UploadInvoice = () => {
+const UploadInvoice = ({ onInvoiceProcessed }) => {
   const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -129,7 +129,11 @@ const UploadInvoice = () => {
       }
 
       const data = await response.json();
-      setExtractedData(data);
+      if (onInvoiceProcessed) {
+        onInvoiceProcessed(data);
+      } else {
+        setExtractedData(data);
+      }
     } catch (err) {
       setExtractionError(err.message || 'An unexpected error occurred during invoice processing.');
     } finally {
@@ -146,7 +150,7 @@ const UploadInvoice = () => {
   };
 
   if (extractedData) {
-    return <InvoiceResults data={extractedData} onReset={resetFlow} />;
+    return <InvoiceResults data={extractedData} sourceView="upload" onUploadNew={resetFlow} onReset={resetFlow} />;
   }
 
   return (

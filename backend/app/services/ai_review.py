@@ -50,28 +50,47 @@ def post_validate_review(review: InvoiceReviewSchema, evidence: Dict[str, Any]) 
         for c in hist_comparisons if c.get("product") and c.get("status") == "COMPARISON_AVAILABLE"
     }
     
+    is_genuine_dup = bool(hist_ctx.get("is_duplicate_invoice"))
+    dup_count = hist_ctx.get("duplicate_invoices_excluded", 1)
+    inv_num = evidence.get("invoice", {}).get("invoice_number") or "this invoice"
+    vend_name = evidence.get("invoice", {}).get("vendor_name") or "this vendor"
+
     cleaned_findings: List[FindingSchema] = []
-    
+    seen_keys = set()
+
     for f in review.findings:
         # Sanitize accusatory wording
         clean_evidence = sanitize_text(f.evidence)
         clean_explanation = sanitize_text(f.explanation)
-        
+        f_type_upper = (f.type or "").strip().upper()
+
+        # Check for any duplicate-related findings from LLM
+        is_dup_related = (
+            "DUPLICATE" in f_type_upper or
+            "duplicate" in clean_evidence.lower() or
+            "duplicate" in clean_explanation.lower()
+        )
+
+        if is_dup_related:
+            # Consolidate: skip LLM variations; we add one authoritative DUPLICATE_INVOICE finding below if genuine
+            continue
+
         # Check for hallucinated price changes
         if f.type == "PRICE_CHANGE":
             prod_key = f.product.strip().lower() if f.product else ""
             if hist_status == "INSUFFICIENT_EVIDENCE" or prod_key not in valid_products:
-                # Discard hallucinated price change or convert to INSUFFICIENT_EVIDENCE
-                cleaned_findings.append(FindingSchema(
-                    type="INSUFFICIENT_EVIDENCE",
-                    severity="NONE",
-                    product=f.product,
-                    evidence="No prior comparable invoice data available for this product.",
-                    explanation="Historical evidence is insufficient to verify unit price changes."
-                ))
+                key = ("INSUFFICIENT_EVIDENCE", f.product)
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    cleaned_findings.append(FindingSchema(
+                        type="INSUFFICIENT_EVIDENCE",
+                        severity="NONE",
+                        product=f.product,
+                        evidence="No prior comparable invoice data available for this product.",
+                        explanation="Historical evidence is insufficient to verify unit price changes."
+                    ))
                 continue
             else:
-                # Valid product comparison exists
                 comp = valid_products[prod_key]
                 pct_chg_avg = comp.get("percentage_change_from_average", 0.0)
                 pct_chg_prev = comp.get("percentage_change_from_previous", 0.0)
@@ -82,33 +101,37 @@ def post_validate_review(review: InvoiceReviewSchema, evidence: Dict[str, Any]) 
                 if is_decrease and severity in ("HIGH", "MEDIUM"):
                     severity = "LOW"
                     
+                key = ("PRICE_CHANGE", comp.get("product"))
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    cleaned_findings.append(FindingSchema(
+                        type="PRICE_CHANGE",
+                        severity=severity,
+                        product=comp.get("product"),
+                        evidence=clean_evidence,
+                        explanation=clean_explanation
+                    ))
+        else:
+            key = (f.type, f.product)
+            if key not in seen_keys:
+                seen_keys.add(key)
                 cleaned_findings.append(FindingSchema(
-                    type="PRICE_CHANGE",
-                    severity=severity,
-                    product=comp.get("product"),
+                    type=f.type,
+                    severity=f.severity,
+                    product=f.product,
                     evidence=clean_evidence,
                     explanation=clean_explanation
                 ))
-        else:
-            cleaned_findings.append(FindingSchema(
-                type=f.type,
-                severity=f.severity,
-                product=f.product,
-                evidence=clean_evidence,
-                explanation=clean_explanation
-            ))
             
-    # Check if duplicate invoice noted
-    if hist_ctx.get("is_duplicate_invoice"):
-        has_dup_finding = any(f.type == "DUPLICATE_INVOICE" for f in cleaned_findings)
-        if not has_dup_finding:
-            cleaned_findings.append(FindingSchema(
-                type="DUPLICATE_INVOICE",
-                severity="MEDIUM",
-                product=None,
-                evidence="An invoice with the same vendor and invoice number was previously processed.",
-                explanation="Duplicate invoice submissions should be checked before payment approval."
-            ))
+    # Add single consolidated, authoritative duplicate finding if this is a genuine duplicate
+    if is_genuine_dup:
+        cleaned_findings.append(FindingSchema(
+            type="DUPLICATE_INVOICE",
+            severity="HIGH",
+            product=None,
+            evidence=f"Invoice #{inv_num} from {vend_name} was previously processed in the system ({dup_count} prior record(s) detected).",
+            explanation="Duplicate submission detected. Excluded from historical price baselines to prevent self-referential bias; requires human verification before payment approval to prevent double payment."
+        ))
 
     # Check if financial discrepancy noted
     if not fin_val.get("total_consistent", True):
@@ -178,7 +201,37 @@ def post_validate_review(review: InvoiceReviewSchema, evidence: Dict[str, Any]) 
             )
     elif final_rec == "REVIEW_RECOMMENDED":
         reasons_text = ", ".join(actionable_reasons)
-        if not any(term in clean_summary_explanation.lower() for term in ["duplicate", "mismatch", "increase", "discrepancy", "variance"]):
+        explanation_lower = clean_summary_explanation.lower()
+        
+        # If the explanation attributes review recommendation to missing historical context
+        # rather than the genuine actionable reasons (e.g., duplicate submission, financial discrepancy):
+        has_actionable_mention = any(
+            term in explanation_lower 
+            for term in ["duplicate", "discrepancy", "arithmetic", "price increase", "mismatch"]
+        )
+        attributes_to_missing_history = any(
+            phrase in explanation_lower
+            for phrase in [
+                "historical context", 
+                "historical data", 
+                "insufficient historical", 
+                "no historical baseline",
+                "lack of historical",
+                "absence of historical",
+                "no prior"
+            ]
+        )
+        
+        if attributes_to_missing_history and not (has_duplicate and "duplicate" in explanation_lower):
+            clean_summary_explanation = (
+                f"Human review is recommended due to: {reasons_text}."
+            )
+            if hist_status == "INSUFFICIENT_EVIDENCE":
+                clean_summary_explanation += (
+                    " Note: Prior submission(s) are excluded from price comparisons to prevent self-referential bias; "
+                    "insufficient historical baseline is an informational condition, not a cause for escalation."
+                )
+        elif not has_actionable_mention:
             clean_summary_explanation += f" Human review is recommended due to: {reasons_text}."
 
     return InvoiceReviewSchema(

@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './InvoiceResults.css';
 
-const InvoiceResults = ({ data, onReset }) => {
+const InvoiceResults = ({
+  data,
+  sourceView = 'upload',
+  onBackToDesk,
+  onUploadNew,
+  onReset,
+  onInvoiceUpdated
+}) => {
   const [currentData, setCurrentData] = useState(data);
   const [disposition, setDisposition] = useState(
     data?.human_disposition?.disposition || data?.review_result?.human_disposition?.disposition || 'ACKNOWLEDGED'
@@ -12,6 +19,17 @@ const InvoiceResults = ({ data, onReset }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+
+  useEffect(() => {
+    setCurrentData(data);
+    setDisposition(
+      data?.human_disposition?.disposition || data?.review_result?.human_disposition?.disposition || 'ACKNOWLEDGED'
+    );
+    setNotes(
+      data?.human_disposition?.notes || data?.review_result?.human_disposition?.notes || ''
+    );
+    setSubmitMessage(null);
+  }, [data]);
 
   if (!currentData) return null;
 
@@ -30,6 +48,9 @@ const InvoiceResults = ({ data, onReset }) => {
       }
       const updated = await res.json();
       setCurrentData(updated);
+      if (onInvoiceUpdated) {
+        onInvoiceUpdated(updated);
+      }
       setSubmitMessage({ type: 'success', text: `Reviewer disposition recorded as: ${disposition}` });
     } catch (err) {
       setSubmitMessage({ type: 'error', text: err.message });
@@ -87,48 +108,121 @@ const InvoiceResults = ({ data, onReset }) => {
 
   const formatPercent = (rate) => {
     if (rate === null || rate === undefined) return 'N/A';
-    return `${(rate * 100).toFixed(2)}%`;
+    const pct = Number(rate) * 100;
+    return Number.isInteger(pct) ? `${pct}%` : `${pct.toFixed(2)}%`;
   };
 
   const pipeline = currentData.pipeline_status || 'UNKNOWN';
-  const isSuccess = pipeline === 'SUCCESS';
+  const isFailed = pipeline === 'FAILED';
+  const finValid = currentData.financial_validation;
+  const revResult = currentData.review_result;
+  const humanDisp = currentData.human_disposition || revResult?.human_disposition;
   
-  const extractionMeta = currentData.extraction_metadata || currentData.review_result?.extraction_metadata || currentData.financial_validation?.extraction_metadata;
-  const humanDisp = currentData.human_disposition || currentData.review_result?.human_disposition;
+  // Pipeline stage statuses: completed, requires-review, failed
+  const stage1Status = isFailed ? 'failed' : 'completed';
+  const stage2Status = isFailed ? 'failed' : (!finValid ? 'completed' : (!finValid.total_consistent ? 'requires-review' : 'completed'));
+  const stage3Status = isFailed ? 'failed' : (!revResult ? 'completed' : (revResult.review_recommendation === 'REVIEW_RECOMMENDED' ? 'requires-review' : 'completed'));
+  const stage4Status = humanDisp ? 'completed' : (stage3Status === 'requires-review' || stage2Status === 'requires-review' ? 'requires-review' : 'completed');
+  
+  const extractionMeta = currentData.extraction_metadata || revResult?.extraction_metadata || finValid?.extraction_metadata;
 
   return (
     <div className="invoice-results-container">
+      {/* Navigation & Context Controls */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        {sourceView === 'review' ? (
+          <button
+            onClick={onBackToDesk}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-color)',
+              color: '#e2e8f0',
+              padding: '0.5rem 0.9rem',
+              borderRadius: '8px',
+              fontSize: '0.88rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            ← Back to Review Desk Queue
+          </button>
+        ) : (
+          <button
+            onClick={onUploadNew || onReset}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-color)',
+              color: '#e2e8f0',
+              padding: '0.5rem 0.9rem',
+              borderRadius: '8px',
+              fontSize: '0.88rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            ← Process Another Invoice
+          </button>
+        )}
+
+        <div style={{ display: 'flex', gap: '0.6rem' }}>
+          {sourceView !== 'review' && (
+            <button
+              onClick={onBackToDesk}
+              style={{
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid var(--border-color)',
+                color: '#cbd5e1',
+                padding: '0.5rem 0.85rem',
+                borderRadius: '8px',
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                cursor: 'pointer'
+              }}
+            >
+              Go to Review Desk Queue →
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="pipeline-container">
         <h3>Invoice Processing Pipeline</h3>
         <div className="pipeline-steps">
-          <div className={`pipeline-step ${isSuccess ? 'completed' : ''}`}>
-            <span className="step-icon">{isSuccess ? '✓' : '○'}</span>
+          <div className={`pipeline-step ${stage1Status}`}>
+            <span className="step-icon">{stage1Status === 'failed' ? '✗' : '✓'}</span>
             <div className="step-content">
               <h4>1. Document Understanding</h4>
               <p>Groq / Qwen Vision Extraction</p>
             </div>
           </div>
           <div className="step-connector">↓</div>
-          <div className={`pipeline-step ${isSuccess ? 'completed' : ''}`}>
-            <span className="step-icon">{isSuccess ? '✓' : '○'}</span>
+          <div className={`pipeline-step ${stage2Status}`}>
+            <span className="step-icon">{stage2Status === 'failed' ? '✗' : (stage2Status === 'requires-review' ? '⚠' : '✓')}</span>
             <div className="step-content">
               <h4>2. Financial Analysis</h4>
-              <p>Deterministic validation + history</p>
+              <p>{stage2Status === 'requires-review' ? 'Discrepancy detected' : 'Deterministic validation + history'}</p>
             </div>
           </div>
           <div className="step-connector">↓</div>
-          <div className={`pipeline-step ${isSuccess ? 'completed' : ''}`}>
-            <span className="step-icon">{isSuccess ? '✓' : '○'}</span>
+          <div className={`pipeline-step ${stage3Status}`}>
+            <span className="step-icon">{stage3Status === 'failed' ? '✗' : (stage3Status === 'requires-review' ? '⚠' : '✓')}</span>
             <div className="step-content">
               <h4>3. AI Invoice Review</h4>
-              <p>LLM evidence interpretation</p>
+              <p>{stage3Status === 'requires-review' ? 'Review recommended' : 'LLM evidence interpretation'}</p>
             </div>
           </div>
           <div className="step-connector">↓</div>
-          <div className={`pipeline-step ${isSuccess ? 'completed' : ''}`}>
-            <span className="step-icon">{isSuccess ? '✓' : '○'}</span>
+          <div className={`pipeline-step ${stage4Status}`}>
+            <span className="step-icon">{humanDisp ? '✓' : (stage4Status === 'requires-review' ? '⏳' : '✓')}</span>
             <div className="step-content">
-              <h4>4. Final Result</h4>
+              <h4>4. Final Human Result</h4>
+              <p>{humanDisp ? `Recorded: ${humanDisp.disposition}` : (stage4Status === 'requires-review' ? 'Pending Reviewer Action' : 'Completed')}</p>
             </div>
           </div>
         </div>
@@ -195,7 +289,12 @@ const InvoiceResults = ({ data, onReset }) => {
           <span>{formatCurrency(currentData.subtotal, currentData.currency)}</span>
         </div>
         <div className="summary-row">
-          <span>Tax Amount:</span>
+          <span>
+            Tax Amount
+            {currentData.financial_validation?.established_tax_rate !== undefined && currentData.financial_validation?.established_tax_rate !== null
+              ? ` (${formatPercent(currentData.financial_validation.established_tax_rate)})`
+              : ''}:
+          </span>
           <span>{formatCurrency(currentData.tax_amount, currentData.currency)}</span>
         </div>
         <div className="summary-row grand-total">
@@ -243,7 +342,12 @@ const InvoiceResults = ({ data, onReset }) => {
             {currentData.financial_validation.total_consistent ? (
               <>
                 <p style={{ color: 'var(--success-color)' }}>✓ Line items match subtotal arithmetic</p>
-                <p style={{ color: 'var(--success-color)' }}>✓ Tax calculation is verified consistent</p>
+                <p style={{ color: 'var(--success-color)' }}>
+                  ✓ Tax calculation is verified consistent
+                  {currentData.financial_validation.established_tax_rate !== undefined && currentData.financial_validation.established_tax_rate !== null
+                    ? ` (Effective rate: ${formatPercent(currentData.financial_validation.established_tax_rate)})`
+                    : ''}
+                </p>
                 <p style={{ color: 'var(--success-color)' }}>✓ Total amount matches subtotal + tax</p>
               </>
             ) : (
@@ -262,10 +366,21 @@ const InvoiceResults = ({ data, onReset }) => {
         <div className="analysis-section">
           <h3>Historical Price Context (Same-Vendor Baseline)</h3>
           <div className="analysis-card">
+            {currentData.historical_context.is_duplicate_invoice && (
+              <div className="warning" style={{ marginBottom: '1.25rem', padding: '0.85rem 1rem', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.45)', borderRadius: '10px' }}>
+                <h4 style={{ margin: '0 0 0.35rem 0', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  ⚠ Duplicate Submission Detected
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.88rem', color: '#fef3c7', lineHeight: 1.5 }}>
+                  Invoice #{currentData.invoice_number} from vendor "{currentData.vendor_name}" has been submitted previously in the system. To prevent self-referential bias, identical previous submission(s) are strictly excluded from the baseline price calculations.
+                </p>
+              </div>
+            )}
+
             {currentData.historical_context.status === 'INSUFFICIENT_EVIDENCE' ? (
               <div style={{ padding: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '8px' }}>
                 <p style={{ margin: 0, color: '#93c5fd' }}>
-                  ℹ <strong>Insufficient Historical Evidence:</strong> {currentData.historical_context.message || 'No prior invoices from this vendor were available with matching currency and strictly prior dates. A price variance cannot be checked.'}
+                  ℹ <strong>Insufficient Historical Evidence:</strong> {currentData.historical_context.message || 'No prior baseline invoices from this vendor were available with matching currency and strictly prior dates. A price variance cannot be checked.'}
                 </p>
               </div>
             ) : (
@@ -329,12 +444,6 @@ const InvoiceResults = ({ data, onReset }) => {
                   })
                 ) : (
                   <p>No valid product comparisons found.</p>
-                )}
-                {currentData.historical_context.is_duplicate_invoice && (
-                  <div className="warning" style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.5)', borderRadius: '8px' }}>
-                    <h4 style={{ margin: '0 0 0.25rem 0', color: '#fbbf24' }}>⚠ Duplicate Submission Detected</h4>
-                    <p style={{ margin: 0, fontSize: '0.85rem' }}>An invoice with this vendor name and invoice number has been processed previously. Excluded from baseline to prevent self-referential bias.</p>
-                  </div>
                 )}
               </>
             )}
@@ -526,10 +635,34 @@ const InvoiceResults = ({ data, onReset }) => {
         </div>
       </div>
 
-      <div className="actions-section" style={{ marginTop: '2rem' }}>
-        <button className="reset-btn" onClick={onReset}>
-          Process Another Invoice
-        </button>
+      <div className="actions-section" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        {sourceView === 'review' ? (
+          <>
+            <button
+              className="reset-btn"
+              onClick={onBackToDesk}
+              style={{ background: 'rgba(99, 102, 241, 0.2)', border: '1px solid rgba(99, 102, 241, 0.4)', color: '#c7d2fe' }}
+            >
+              ← Return to Review Desk Queue
+            </button>
+            <button className="reset-btn" onClick={onUploadNew || onReset} style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+              Process Another Invoice
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="reset-btn" onClick={onUploadNew || onReset}>
+              Process Another Invoice
+            </button>
+            <button
+              className="reset-btn"
+              onClick={onBackToDesk}
+              style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid var(--border-color)' }}
+            >
+              Open Review Desk Queue →
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

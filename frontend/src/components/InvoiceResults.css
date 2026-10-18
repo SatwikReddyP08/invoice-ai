@@ -289,6 +289,20 @@ h3::before {
   box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
 }
 
+.pipeline-step.requires-review {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);
+}
+
+.pipeline-step.failed {
+  background: var(--error-bg);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+}
+
 .step-icon {
   font-size: 1.5rem;
   margin-right: 1.25rem;
@@ -303,6 +317,16 @@ h3::before {
 .pipeline-step.completed .step-icon {
   color: var(--success-color);
   text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.pipeline-step.requires-review .step-icon {
+  color: var(--warning-color);
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.pipeline-step.failed .step-icon {
+  color: var(--error-color);
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
 
 .step-content h4 {

@@ -1,0 +1,73 @@
+{
+  "report_title": "InVoice AI Audit & Review Report - #ACD-2026-001",
+  "report_generated_at": "2026-10-18T14:45:00.000Z",
+  "invoice_id": 1,
+  "invoice_summary": {
+    "invoice_number": "ACD-2026-001",
+    "vendor_name": "Nova Workspace Solutions",
+    "customer_name": "Acme Global Technologies",
+    "invoice_date": "2026-09-15T00:00:00",
+    "currency": "INR",
+    "subtotal": 20000.00,
+    "tax_amount": 3600.00,
+    "total_amount": 23600.00,
+    "pipeline_status": "SUCCESS"
+  },
+  "line_items": [
+    {
+      "description": "Ergonomic Mesh Chair Model X",
+      "quantity": 2.0,
+      "unit_price": 7500.00,
+      "tax_rate": 0.18,
+      "line_total": 15000.00
+    },
+    {
+      "description": "Adjustable Monitor Arm Dual",
+      "quantity": 1.0,
+      "unit_price": 5000.00,
+      "tax_rate": 0.18,
+      "line_total": 5000.00
+    }
+  ],
+  "extraction_provenance": {
+    "method": "LLM_ASSISTED",
+    "provenance": "Groq Vision API (qwen/qwen3.8-27b)",
+    "processing_time_seconds": 1.84,
+    "completeness_status": "EXTRACTION_COMPLETE",
+    "fields_requiring_verification": []
+  },
+  "financial_validation": {
+    "total_consistent": true,
+    "subtotal": 20000.00,
+    "tax_amount": 3600.00,
+    "total_amount": 23600.00,
+    "calculated_total": 23600.00,
+    "difference": 0.0,
+    "line_items_count": 2
+  },
+  "historical_price_analysis": {
+    "status": "INSUFFICIENT_EVIDENCE",
+    "total_historical_invoices": 0,
+    "is_duplicate_invoice": true,
+    "comparisons": []
+  },
+  "ai_review": {
+    "review_recommendation": "REVIEW_RECOMMENDED",
+    "pipeline_status": "REVIEW_RECOMMENDED",
+    "findings": [
+      {
+        "type": "DUPLICATE_INVOICE",
+        "severity": "HIGH",
+        "product": null,
+        "evidence": "Invoice #ACD-2026-001 from Nova Workspace Solutions was previously processed in the system (1 prior record(s) detected).",
+        "explanation": "Duplicate submission detected. Excluded from historical price baselines to prevent self-referential bias; requires human verification before payment approval to prevent double payment."
+      }
+    ],
+    "overall_decision_explanation": "Human review is recommended due to: duplicate invoice submission. Note: Prior submission(s) are excluded from price comparisons to prevent self-referential bias; insufficient historical baseline is an informational condition, not a cause for escalation."
+  },
+  "human_reviewer_disposition": {
+    "disposition": "RESOLVED",
+    "notes": "Verified against renewed contract master pricing.",
+    "updated_at": "2026-10-18T14:48:00.000Z"
+  }
+}

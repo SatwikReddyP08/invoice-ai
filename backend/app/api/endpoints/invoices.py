@@ -184,6 +184,19 @@ def extract_invoice_data(
         db.commit()
         
         financial_analysis = analyze_financials(extracted_data)
+
+        # Preserve explicitly extracted or reliably established tax rate across line items
+        established_rate = financial_analysis.get("established_tax_rate")
+        if established_rate is not None and extracted_data.items:
+            items_need_update = False
+            for item in extracted_data.items:
+                if item.tax_rate is None:
+                    item.tax_rate = established_rate
+                    items_need_update = True
+            if items_need_update:
+                items_update = [item.model_dump() for item in extracted_data.items]
+                invoice = crud_invoice.update_invoice(db=db, db_invoice=invoice, invoice_in=InvoiceUpdate(items=items_update))
+
         historical_context = analyze_history(db, extracted_data, invoice.id)
         
         if extraction_meta:
