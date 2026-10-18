@@ -121,15 +121,30 @@ npm install
 
 ---
 
-## Review Workflow & Audit Export
+## Review Desk Workflow & Audit Export
 
-The **Review Desk** categorizes invoices into actionable queues:
-* **Needs Attention**: Invoices with arithmetic discrepancies, duplicate submissions, or significant unit-price increases (>10%).
-* **Completed Reviews**: Invoices where an authorized reviewer recorded a disposition (`ACKNOWLEDGED`, `NEEDS_FOLLOW_UP`, `RESOLVED`).
-* **Informational / Normal**: Invoices mathematically verified with no actionable variances.
+The **Invoice Review Desk** organizes processed documents into dedicated operational triage queues:
+* **⚠ Needs Attention**: Invoices with arithmetic discrepancies, duplicate submissions, or significant unit-price increases (>10%).
+* **✓ Completed Reviews**: Invoices where a reviewer has recorded an operational disposition (`ACKNOWLEDGED`, `NEEDS_FOLLOW_UP`, or `RESOLVED`).
+* **ℹ Informational / Normal**: Invoices mathematically verified with no actionable variances or baseline exceptions.
 * **All Invoices**: Master ledger of all processed documents.
 
-Every processed invoice supports single-click export of a standardized JSON audit record reconciling extracted data, arithmetic validation, historical baseline comparisons, AI findings, and the human disposition. An illustrative synthetic example is provided in [`docs/sample_audit_report.json`](docs/sample_audit_report.json):
+### Invoice Inspection & Human Disposition
+When an invoice is uploaded from `#upload` or selected from the Review Desk (`#review`), the application navigates to its generated invoice view (`#invoice-{id}`). Reviewers can:
+1. **Inspect Extraction & Arithmetic**: Review extracted line items, subtotal, tax rate, and the independent mathematical balance check.
+2. **Evaluate Historical Price Baselines**: Examine unit price shifts compared to prior submissions from the same vendor.
+3. **Record Reviewer Disposition**: Select from available operational dispositions:
+   * `ACKNOWLEDGED`: Findings noted; proceed per standard accounts payable workflow.
+   * `NEEDS_FOLLOW_UP`: Requires vendor or procurement clarification.
+   * `RESOLVED`: Exception verified, approved, and cleared.
+   Reviewers can enter an optional note and click **Record Human Disposition**. Dispositions can be updated as review progresses; they are not locked or cryptographically immutable.
+4. **Export Standardized Audit Reports**: From the Review Desk table, clicking **📥 Report (JSON)** exports a verifiable audit report reconciling extraction provenance, mathematical validation, historical price comparisons, AI findings, and human disposition.
+
+> **Note on Duplicate Ingestion & Sample Testing**:
+> If a test invoice is submitted more than once (such as reference sample `ACD-2026-001`), InVoice AI legitimately detects and flags it as a duplicate submission. This is intended behavior to prevent duplicate payments. Identical re-submissions are excluded from baseline calculations to prevent distorting rolling price statistics.
+
+### Synthetic Audit Report Sample
+An illustrative synthetic audit record is provided in [`docs/sample_audit_report.json`](docs/sample_audit_report.json):
 
 ```json
 {
@@ -156,23 +171,12 @@ Every processed invoice supports single-click export of a standardized JSON audi
     "review_recommendation": "REVIEW_RECOMMENDED",
     "findings": [{ "type": "PRICE_CHANGE", "severity": "MEDIUM", "product": "Ergonomic Lumbar Task Chair" }]
   },
-  "human_reviewer_disposition": { "disposition": "RESOLVED", "notes": "Verified against contract addendum." }
+  "human_reviewer_disposition": {
+    "disposition": "RESOLVED",
+    "notes": "Demonstration review note: Unit price variance reviewed and accepted for illustrative testing."
+  }
 }
 ```
-
----
-
-## Walkthrough Demo Script (45–90 Seconds)
-
-Pre-recorded video files and screenshots are not bundled with this repository. To capture or present a live walkthrough from a local installation, follow this sequence:
-
-| Time | URL / View | Action & Visual Focus | Suggested Narration |
-|---|---|---|---|
-| **0:00–0:15** | `http://localhost:5173/#upload` | Drop test invoice PDF. Click **Upload**, then **Process Invoice**. | *"InVoice AI evaluates supplier invoices through a predictable 4-stage pipeline combining vision extraction, deterministic math, and AI review."* |
-| **0:15–0:35** | `http://localhost:5173/#invoice-1` | View 4-stage status badges, extracted line items, and established tax rate. | *"Groq Vision extracts structured line items, while pure Python Decimal arithmetic independently validates line totals and tax consistency."* |
-| **0:35–0:50** | Mid-page scroll | Inspect Historical Price Context and AI Review findings. | *"Identical prior submissions are detected and excluded from baseline pricing; findings clearly explain price increases above threshold."* |
-| **0:50–1:15** | Bottom of page | Select **RESOLVED**, enter note *"Verified against contract addendum"*, click **Record Human Disposition**, then **Download Audit Report (JSON)**. | *"Human reviewers retain final authority. Recording a disposition updates the queue and exports a verifiable JSON audit report."* |
-| **1:15–1:30** | Top Nav -> Review Desk | Click **Invoice Review Desk**, view **Completed Reviews** tab. | *"The Review Desk organizes invoices into actionable queues: Needs Attention, Completed, and Informational."* |
 
 ---
 
