@@ -1,19 +1,28 @@
 # InVoice AI
 
-**Multi-Stage Invoice Intelligence, Historical Price Analysis & Audit Desk**
-
-InVoice AI is a full-stack invoice intelligence application engineered to evaluate supplier billing accuracy, detect price creep, and support accounts payable workflows. Rather than relying on an autonomous agent to execute unverified actions, InVoice AI operates as a **predictable, multi-stage pipeline**: visual document extraction and LLM review are separated by deterministic financial validation and same-vendor historical price baselines.
+> An AI-assisted invoice intelligence and review platform combining vision document extraction, deterministic financial validation, same-vendor historical price baselines, and human-in-the-loop audit workflows.
 
 ---
 
-## The Problem
+## Project Overview
 
-Accounts payable teams processing recurring supplier invoices face distinct operational challenges:
-1. **Unnoticed Price Creep**: Suppliers incrementally raising unit prices on catalog items above established historical baselines.
-2. **Mathematical Discrepancies**: Subtle mismatches between line totals, calculated tax, and stated invoice totals.
-3. **Duplicate Billing**: Inadvertent re-processing of previously submitted invoice numbers from the same vendor.
+Accounts payable workflows handle high volumes of variable-format supplier invoices. When organizations attempt to automate invoice processing, they often face two extremes: rigid legacy OCR templates that break when layouts shift, or unconstrained "black box" AI agents that hallucinate arithmetic and make unverified approval decisions.
 
-InVoice AI automates the detection of arithmetic errors and price variances while keeping human reviewers firmly in control of invoice approval decisions.
+**InVoice AI explores a hybrid, evidence-based engineering approach**:
+* **Probabilistic AI for Document Perception**: High-parameter vision LLMs extract unstructured header data, line items, and tax rates across arbitrary visual layouts without manual coordinate templating.
+* **Deterministic Code for Mathematical Truth**: Extracted figures are handed off to pure Python `Decimal` arithmetic for subtotal, tax, and line-item reconciliation, alongside same-vendor historical price baseline tracking.
+* **Evidence-Bound Synthesis**: The review model is prompted exclusively with verified arithmetic findings to produce objective operational summaries without speculative fraud accusations.
+* **Human-in-the-Loop Authority**: Discrepancies and price creep are surfaced to an interactive Review Desk where authorized reviewers record formal dispositions and export standardized audit reports.
+
+---
+
+## Problem Statement
+
+Accounts payable teams processing recurring supplier invoices face recurring operational challenges:
+1. **Unnoticed Price Creep**: Suppliers incrementally raising unit prices on catalog items above historical agreements.
+2. **Mathematical Discrepancies**: Subtle mismatches between line totals, calculated tax rates, and stated invoice totals.
+3. **Duplicate Billing Risks**: Inadvertent re-processing of previously submitted invoice numbers from the same vendor.
+4. **Lack of Auditability**: Automated systems approving disbursements without verifiable, explainable calculation logs.
 
 ---
 
@@ -55,11 +64,11 @@ flowchart TD
 
 ## Technology Stack
 
-* **Backend**: Python 3.11+, FastAPI, SQLAlchemy 2.0, Alembic, Pydantic v2, PyMuPDF. Detailed schema and endpoint documentation in [`backend/README.md`](backend/README.md).
 * **Frontend**: React 19, Vite, Vanilla CSS (custom glassmorphic theme). Component hierarchy and UI workflow in [`frontend/README.md`](frontend/README.md).
+* **Backend**: Python 3.11+, FastAPI, SQLAlchemy 2.0, Alembic, Pydantic v2, PyMuPDF. Detailed schema and endpoint documentation in [`backend/README.md`](backend/README.md).
 * **Database**: PostgreSQL 14+ with relational models and JSON audit fields.
-* **AI & Document Understanding**: Groq Cloud SDK (`groq-python`) leveraging vision models.
-* **Research Suite**: Candidate benchmarking scripts and exploratory evaluation data in [`backend/evaluation/README.md`](backend/evaluation/README.md).
+* **AI & Document Understanding**: Groq Cloud SDK (`groq-python`) leveraging vision models (`qwen/qwen3.8-27b`).
+* **Research & Evaluation Suite**: Candidate benchmarking scripts and exploratory evaluation data in [`backend/evaluation/README.md`](backend/evaluation/README.md).
 
 ---
 
@@ -167,6 +176,26 @@ Pre-recorded video files and screenshots are not bundled with this repository. T
 
 ---
 
+## Key Learnings
+
+Developing InVoice AI provided practical engineering insights into AI-software integration and financial system design:
+
+* **Strict Boundary Separation (Perception vs. Computation)**: Generative models excel at extracting semantics from arbitrary visual layouts, but fail unpredictably at basic arithmetic. Enforcing a strict architectural boundary—where the LLM produces structured data and deterministic code computes all totals—guarantees mathematical consistency while retaining layout flexibility.
+* **Eliminating Baseline Contamination**: Historical baselines must exclude identical re-submissions. If a duplicate invoice is ingested into the comparison pool, it dilutes variance thresholds and obscures genuine price creep. Isolating baselines to same-vendor, prior-dated records protects audit integrity.
+* **Document AI Practicalities**: Benchmarking revealed that high-capacity multimodal vision LLMs offer rapid adaptability across diverse invoice templates compared to rigid coordinate-based OCR or fine-tuned token-classification models (LayoutLMv3/Donut), which struggle when supplier formatting deviates from training distributions.
+* **Human-in-the-Loop Workflow Design**: AI should assist and explain, not autonomously authorize financial disbursements. Building an actionable triage desk with auditable dispositions (`ACKNOWLEDGED`, `NEEDS_FOLLOW_UP`, `RESOLVED`) creates accountable human oversight.
+
+---
+
+## Future Direction
+
+* **Multi-Page Document Chunking**: Extending the PyMuPDF preprocessing pipeline to handle complex multi-page statements and batch invoice packets.
+* **Role-Based Access Control (RBAC)**: Introducing tiered permissions for AP clerks, finance managers, and compliance auditors.
+* **Purchase Order Matching**: Two-way and three-way PO reconciliation against enterprise ERP databases.
+* **Cryptographic Audit Signing**: Attaching tamper-evident digital signatures to exported JSON audit reports.
+
+---
+
 ## Limitations & Project Scope
 
 * **Engineering Portfolio Scope**: InVoice AI is a portfolio project and proof-of-concept demonstrating practical AI integration and pipeline architecture. It has not undergone enterprise compliance certification or third-party penetration testing.
@@ -174,3 +203,13 @@ Pre-recorded video files and screenshots are not bundled with this repository. T
 * **Historical Baseline Requirements**: Price comparisons require prior invoices from the same vendor with matching currency and earlier dates.
 * **Input Validation**: Documents are restricted to 10 MB and checked for basic image/PDF magic bytes (`filetype`). Real-world deployments require additional malware scanning and tenant isolation.
 * **Evaluation Scope**: Exploratory benchmarks in `backend/evaluation/` reflect a 10-document reference set used to compare model architectures; they are not generalized accuracy guarantees across arbitrary global invoice formats.
+
+---
+
+## 👨‍💻 Author
+
+**Satwik Reddy Pathapati**
+* GitHub: [@SatwikReddyP08](https://github.com/SatwikReddyP08)
+* Repository: [https://github.com/SatwikReddyP08/invoice-ai](https://github.com/SatwikReddyP08/invoice-ai)
+
+If you find this project or its engineering approach interesting, feel free to explore the repository, try the local setup, or connect with me for feedback and discussions.

@@ -69,8 +69,7 @@ evaluation/
 ├── dataset/
 │   ├── ground_truth/         # Field-level JSON ground truth per document
 │   └── invoices/             # 10 test invoice files (PDFs and PNGs)
-├── data/
-│   └── katanaml_test.parquet # Reference evaluation dataset
+├── data/                     # Local raw data cache (gitignored; excluded from public release)
 ├── results/                  # Serialized evaluation outputs
 │   ├── baseline_groq_qwen_results.json
 │   ├── baseline_summary.json
