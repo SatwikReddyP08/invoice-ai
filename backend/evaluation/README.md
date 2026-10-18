@@ -31,31 +31,34 @@ Each candidate model was benchmarked against verified ground truth across:
 
 ---
 
-## 3. Benchmarked Candidates & Results Summary
+## 3. Benchmarked Candidates & Results Summary (10-Document Reference Set)
 
-| Model / Candidate | Architecture | Header Accuracy | Line Item Extraction | Scanned PDF Support | Latency (Avg) | Operational Viability |
-|---|---|---|---|---|---|---|
-| **Groq / Qwen Vision (`qwen/qwen3.8-27b`)** *(Baseline)* | Multi-Modal Vision LLM | **100.0%** (80/80 fields) | **90.0%** (complete tables) | Yes | ~1.7s | **Production Primary** |
-| **LayoutLMv3 (`layoutlmv3-finetuned-invoice`)** | Multi-Modal Transformer (BIO Token Classification) | 48.7% | 30.0% (fragmented tokens) | Partial (needs OCR) | ~0.6s | Experimental Only |
-| **Donut (`invoices-donut-model-v1`)** | OCR-Free Vision Encoder-Decoder | 37.5% | 20.0% (hallucinated counts) | Yes | ~2.1s | Failed Quality Gate |
-| **PyMuPDF Deterministic Parser** | Spatial Geometry & Coordinate Clustering | 71.2% (digital only) | 60.0% (digital only) | No (0% without OCR) | **0.08s** | Research Asset |
+> **Notice on Dataset Scope & Licensing:**
+> The evaluation metrics below reflect an exploratory benchmark on a 10-document reference set created to evaluate architectural trade-offs. The raw external dataset file (`katanaml_test.parquet`) used during local experimentation has been excluded from public release due to unverified redistribution licensing. The benchmark scripts, procedural dataset generator (`prepare_evaluation_dataset.py`), and committed evaluation summaries in `results/` are preserved for research transparency.
+
+| Model / Candidate | Architecture | Header Field Match (10 Docs) | Complete Table Extraction | Latency (Avg) | Assessment |
+|---|---|---|---|---|---|
+| **Groq / Qwen Vision (`qwen/qwen3.8-27b`)** | Multi-Modal Vision LLM | 80/80 fields (100%) | 9/10 tables (90%) | ~1.7s | **Primary Pipeline Baseline** |
+| **LayoutLMv3 (`layoutlmv3-finetuned-invoice`)** | Transformer (BIO Token Classification) | 39/80 fields (48.7%) | 3/10 tables (30%) | ~0.6s | Experimental (token fragmentation) |
+| **Donut (`invoices-donut-model-v1`)** | OCR-Free Vision Encoder-Decoder | 30/80 fields (37.5%) | 2/10 tables (20%) | ~2.1s | Generative hallucination & truncation |
+| **PyMuPDF Spatial Parser** | Spatial Geometry & Coordinate Clustering | 57/80 fields (71.2%) | 6/10 tables (60%) | **0.08s** | Fast on clean digital PDFs; unsupported on scanned raster |
 
 ---
 
 ## 4. Key Findings & Engineering Limitations
 
-### Why Vision LLM Was Retained for Production
+### Why Vision LLM Was Chosen as the Pipeline Baseline
 1. **Layout Invariance**: Multi-modal vision models interpret non-standard grids, rotated stamps, discounts, and regional tax notations without requiring per-vendor templates.
 2. **Mathematical Consistency**: Vision LLMs reliably differentiate between item subtotal and grand total, preventing false arithmetic discrepancies in Stage 2.
-3. **Scanned PDF Handling**: Visual perception operates natively on raster images without external OCR engines (Tesseract).
+3. **Scanned Document Handling**: Visual perception operates natively on raster images without external OCR engines.
 
 ### Deficiencies in Specialized Small Models
-1. **Token Classification (LayoutLMv3)**: Highly susceptible to token fragmentation. While it can identify that text is an "amount," it struggles to associate which amount corresponds to subtotal vs. tax vs. total in multi-column layouts.
+1. **Token Classification (LayoutLMv3)**: Highly susceptible to token fragmentation. While it identifies text as an "amount," it struggles to associate which amount corresponds to subtotal vs. tax vs. total in multi-column layouts.
 2. **Generative Seq2Seq (Donut)**: Prone to generative hallucinations, skipping line items on long tables, and truncation on multi-page invoices.
-3. **Deterministic Spatial Parsing**: Achieved remarkable sub-second latency (0.08s) on digital invoices, but completely fails on raster images and breaks when column headers vary from anticipated patterns.
+3. **Deterministic Spatial Parsing**: Fast on digital invoices, but fails on raster images and breaks when column headers deviate from expected keywords.
 
 ### Evaluation Scope Notice
-The benchmark results reported here reflect performance on the 10-document reference set. While indicative of architecture characteristics, they should not be taken as a blanket guarantee across all global invoice variants.
+These metrics reflect performance solely on the 10-document reference set. They demonstrate architectural trade-offs on complex layouts and should not be interpreted as a blanket guarantee across all arbitrary global invoice formats.
 
 ---
 

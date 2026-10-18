@@ -51,3 +51,7 @@ logs/
 # Uploaded Invoice Storage
 backend/storage/*
 !backend/storage/.gitignore
+
+# External Evaluation Data (unverified third-party redistributions)
+backend/evaluation/data/
+

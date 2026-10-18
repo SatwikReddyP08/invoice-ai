@@ -1,6 +1,6 @@
 # InVoice AI — Frontend Application
 
-The frontend of InVoice AI is a modern, responsive single-page web application built with **React (18 / 19)**, **Vite**, and **Vanilla CSS**. It provides an intuitive interface for uploading invoice documents, inspecting multi-stage pipeline results, triaging flagged discrepancies, and recording human audit decisions.
+The frontend of InVoice AI is a modern, responsive single-page web application built with **React 19**, **Vite**, and **Vanilla CSS**. It provides an intuitive interface for uploading invoice documents, inspecting multi-stage pipeline results, triaging flagged discrepancies, and recording human audit decisions.
 
 ---
 

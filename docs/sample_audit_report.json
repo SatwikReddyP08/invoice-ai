@@ -1,73 +1,98 @@
 {
-  "report_title": "InVoice AI Audit & Review Report - #ACD-2026-001",
+  "report_title": "InVoice AI Audit & Review Report - #SYNTH-INV-2026-0842 (Synthetic Illustrative Example)",
   "report_generated_at": "2026-10-18T14:45:00.000Z",
-  "invoice_id": 1,
+  "invoice_id": 101,
   "invoice_summary": {
-    "invoice_number": "ACD-2026-001",
-    "vendor_name": "Nova Workspace Solutions",
-    "customer_name": "Acme Global Technologies",
-    "invoice_date": "2026-09-15T00:00:00",
-    "currency": "INR",
-    "subtotal": 20000.00,
-    "tax_amount": 3600.00,
-    "total_amount": 23600.00,
+    "invoice_number": "SYNTH-INV-2026-0842",
+    "vendor_name": "Northwest Office Solutions LLC (Synthetic)",
+    "customer_name": "Apex Enterprise Systems Inc. (Synthetic)",
+    "invoice_date": "2026-10-01T00:00:00",
+    "currency": "USD",
+    "subtotal": 1200.00,
+    "tax_amount": 96.00,
+    "total_amount": 1296.00,
     "pipeline_status": "SUCCESS"
   },
   "line_items": [
     {
-      "description": "Ergonomic Mesh Chair Model X",
+      "description": "Ergonomic Lumbar Task Chair",
       "quantity": 2.0,
-      "unit_price": 7500.00,
-      "tax_rate": 0.18,
-      "line_total": 15000.00
+      "unit_price": 450.00,
+      "tax_rate": 0.08,
+      "line_total": 900.00
     },
     {
-      "description": "Adjustable Monitor Arm Dual",
-      "quantity": 1.0,
-      "unit_price": 5000.00,
-      "tax_rate": 0.18,
-      "line_total": 5000.00
+      "description": "Height-Adjustable Dual Monitor Arm",
+      "quantity": 2.0,
+      "unit_price": 150.00,
+      "tax_rate": 0.08,
+      "line_total": 300.00
     }
   ],
   "extraction_provenance": {
     "method": "LLM_ASSISTED",
     "provenance": "Groq Vision API (qwen/qwen3.8-27b)",
-    "processing_time_seconds": 1.84,
+    "processing_time_seconds": 1.72,
     "completeness_status": "EXTRACTION_COMPLETE",
     "fields_requiring_verification": []
   },
   "financial_validation": {
     "total_consistent": true,
-    "subtotal": 20000.00,
-    "tax_amount": 3600.00,
-    "total_amount": 23600.00,
-    "calculated_total": 23600.00,
+    "subtotal": 1200.00,
+    "tax_amount": 96.00,
+    "total_amount": 1296.00,
+    "calculated_total": 1296.00,
     "difference": 0.0,
     "line_items_count": 2
   },
   "historical_price_analysis": {
-    "status": "INSUFFICIENT_EVIDENCE",
-    "total_historical_invoices": 0,
-    "is_duplicate_invoice": true,
-    "comparisons": []
+    "status": "SUFFICIENT_EVIDENCE",
+    "total_historical_invoices": 4,
+    "is_duplicate_invoice": false,
+    "comparisons": [
+      {
+        "product": "Ergonomic Lumbar Task Chair",
+        "current_unit_price": 450.00,
+        "latest_previous_unit_price": 400.00,
+        "historical_average_unit_price": 405.00,
+        "percentage_change_from_previous": 12.5,
+        "percentage_change_from_average": 11.1,
+        "sample_size": 4,
+        "change_category": "SIGNIFICANT_INCREASE",
+        "is_actionable_increase": true,
+        "threshold_exceeded": true
+      },
+      {
+        "product": "Height-Adjustable Dual Monitor Arm",
+        "current_unit_price": 150.00,
+        "latest_previous_unit_price": 150.00,
+        "historical_average_unit_price": 150.00,
+        "percentage_change_from_previous": 0.0,
+        "percentage_change_from_average": 0.0,
+        "sample_size": 4,
+        "change_category": "NO_CHANGE",
+        "is_actionable_increase": false,
+        "threshold_exceeded": false
+      }
+    ]
   },
   "ai_review": {
     "review_recommendation": "REVIEW_RECOMMENDED",
     "pipeline_status": "REVIEW_RECOMMENDED",
     "findings": [
       {
-        "type": "DUPLICATE_INVOICE",
-        "severity": "HIGH",
-        "product": null,
-        "evidence": "Invoice #ACD-2026-001 from Nova Workspace Solutions was previously processed in the system (1 prior record(s) detected).",
-        "explanation": "Duplicate submission detected. Excluded from historical price baselines to prevent self-referential bias; requires human verification before payment approval to prevent double payment."
+        "type": "PRICE_CHANGE",
+        "severity": "MEDIUM",
+        "product": "Ergonomic Lumbar Task Chair",
+        "evidence": "Current unit price $450.00 is 12.5% above previous price of $400.00 (historical average $405.00, N=4).",
+        "explanation": "Unit price increase exceeds the 10.0% operational threshold; reviewer verification recommended to confirm contract rate."
       }
     ],
-    "overall_decision_explanation": "Human review is recommended due to: duplicate invoice submission. Note: Prior submission(s) are excluded from price comparisons to prevent self-referential bias; insufficient historical baseline is an informational condition, not a cause for escalation."
+    "overall_decision_explanation": "Human review is recommended due to: unit price increase exceeding historical threshold on Ergonomic Lumbar Task Chair (+12.5%). Financial arithmetic is fully verified."
   },
   "human_reviewer_disposition": {
     "disposition": "RESOLVED",
-    "notes": "Verified against renewed contract master pricing.",
-    "updated_at": "2026-10-18T14:48:00.000Z"
+    "notes": "Verified against renewed master service agreement addendum effective Oct 2026.",
+    "updated_at": "2026-10-02T14:30:00.000Z"
   }
 }
