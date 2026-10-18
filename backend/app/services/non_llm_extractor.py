@@ -98,6 +98,8 @@ def extract_customer_from_blocks(page_blocks: list, full_text: str) -> Optional[
     # 1. Spatial Block Inspection on Page 1
     if page_blocks and len(page_blocks) > 0:
         for b in page_blocks[0]:
+            if len(b) < 5 or not isinstance(b[4], str):
+                continue
             b_text = b[4].strip()
             lines = [l.strip() for l in b_text.splitlines() if l.strip()]
             for idx, line in enumerate(lines):
@@ -145,7 +147,7 @@ def extract_tax_amounts(full_text: str, subtotal: Optional[float], total_amount:
         # GST with percentage: GST (18%), GST @ 18%, GST 18%
         r"(?:\bGST\b|\bTax\b|\bVAT\b|\bIGST\b)\s*(?:\(\s*(\d+(?:\.\d+)?)%\s*\)|\@\s*(\d+(?:\.\d+)?)%|\s*(\d+(?:\.\d+)?)%)?[:\s]+(?:[A-Z]{3}|[$€£₹]|Rs\.?)?\s*([\d,]+(?:\.\d{1,2})?)(?!\s*[A-Za-z0-9])",
         # Generic Tax / VAT / GST without ID suffixes
-        r"(?<!(?:IN|No|ID|Reg|Number|\/))\b(?:GST|VAT|Tax)\b(?!\s*(?:IN|ID|No|Num|Reg|Registration))[:\s]+(?:[A-Z]{3}|[$€£₹]|Rs\.?)?\s*([\d,]+(?:\.\d{1,2})?)(?!\s*[A-Za-z0-9])"
+        r"\b(?:GST|VAT|Tax)\b(?!\s*(?:IN|ID|No|Num|Reg|Registration))[:\s]+(?:[A-Z]{3}|[$€£₹]|Rs\.?)?\s*([\d,]+(?:\.\d{1,2})?)(?!\s*[A-Za-z0-9])"
     ]
 
     for pat in tax_line_patterns:
@@ -409,6 +411,8 @@ def extract_non_llm(file_path: str) -> Tuple[InvoiceExtractionSchema, Dict[str, 
     if not vendor_name and len(page_blocks) > 0 and len(page_blocks[0]) > 0:
         # Fallback to top visual block on page 1
         for b in page_blocks[0][:4]:
+            if len(b) < 5 or not isinstance(b[4], str):
+                continue
             b_text = b[4].strip()
             lines = [l.strip() for l in b_text.splitlines() if len(l.strip()) > 2]
             for l in lines:

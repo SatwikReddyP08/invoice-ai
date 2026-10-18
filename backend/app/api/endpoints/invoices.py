@@ -25,6 +25,9 @@ from app.services.non_llm_extractor import NonLLMExtractionError
 from app.schemas.comparison import ExtractionComparisonResponse
 from app.core.config import settings
 from datetime import datetime, timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -146,11 +149,13 @@ def extract_invoice_data(
             )
             invoice = crud_invoice.update_invoice(db=db, db_invoice=invoice, invoice_in=update_data)
         except NonLLMExtractionError as e:
+            logger.warning(f"NonLLMExtractionError on invoice {invoice_id}: {e}")
             db.rollback()
             invoice.pipeline_status = PipelineStatus.FAILED
             db.commit()
             raise HTTPException(status_code=422, detail=str(e))
         except Exception as e:
+            logger.exception(f"Stage 1 Extraction failed on invoice {invoice_id}: {e}")
             db.rollback()
             invoice.pipeline_status = PipelineStatus.FAILED
             db.commit()
@@ -216,6 +221,7 @@ def extract_invoice_data(
         
         return invoice
     except Exception as e:
+        logger.exception(f"Pipeline failed at Stage 2/3 on invoice {invoice_id}: {e}")
         db.rollback()
         invoice.pipeline_status = PipelineStatus.FAILED
         db.commit()
