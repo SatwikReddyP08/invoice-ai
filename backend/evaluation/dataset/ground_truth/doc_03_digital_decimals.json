@@ -1,0 +1,35 @@
+{
+  "doc_id": "doc_03_digital_decimals",
+  "doc_type": "digital_pdf",
+  "invoice_number": "INV-2026-003",
+  "vendor_name": "Nova Workspace Solutions Pvt. Ltd.",
+  "invoice_date": "2026-12-15",
+  "customer_name": "Apex Digital Systems Pvt. Ltd.",
+  "currency": "INR",
+  "subtotal": 22750.0,
+  "tax_amount": 4095.0,
+  "total_amount": 26845.0,
+  "items": [
+    {
+      "description": "Ergonomic Mouse Pad",
+      "quantity": 4.0,
+      "unit_price": 1137.5,
+      "tax_rate": 0.18,
+      "line_total": 4550.0
+    },
+    {
+      "description": "HD Web Camera (1080p)",
+      "quantity": 2.0,
+      "unit_price": 5950.0,
+      "tax_rate": 0.18,
+      "line_total": 11900.0
+    },
+    {
+      "description": "Multi-Port USB Hub",
+      "quantity": 3.0,
+      "unit_price": 2100.0,
+      "tax_rate": 0.18,
+      "line_total": 6300.0
+    }
+  ]
+}

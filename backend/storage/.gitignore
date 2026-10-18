@@ -1,0 +1,3 @@
+# Ignore all uploaded invoice documents
+*
+!.gitignore

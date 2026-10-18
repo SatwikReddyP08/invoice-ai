@@ -1,0 +1,13 @@
+{
+  "doc_id": "doc_04_scanned_raster",
+  "doc_type": "scanned_pdf",
+  "invoice_number": "9999",
+  "vendor_name": "Final Test Vendor",
+  "invoice_date": null,
+  "customer_name": null,
+  "currency": "USD",
+  "subtotal": null,
+  "tax_amount": null,
+  "total_amount": 123.45,
+  "items": []
+}

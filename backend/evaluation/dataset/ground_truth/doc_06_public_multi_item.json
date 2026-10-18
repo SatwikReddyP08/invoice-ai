@@ -1,0 +1,56 @@
+{
+  "doc_id": "doc_06_public_multi_item",
+  "doc_type": "public_dataset",
+  "invoice_number": "13194726",
+  "vendor_name": "Hopkins and Sons",
+  "invoice_date": "2021-05-29",
+  "customer_name": "Sims PLC",
+  "currency": "USD",
+  "subtotal": 581.93,
+  "tax_amount": 58.19,
+  "total_amount": 640.12,
+  "items": [
+    {
+      "description": "Beach Lunch Lounge Striped Shirt Dress Large Navy Blue White Long Sleeve Causal",
+      "quantity": 1.0,
+      "unit_price": 16.99,
+      "tax_rate": 0.1,
+      "line_total": 16.99
+    },
+    {
+      "description": "Jams World Hawaiian 0 Dress Rayon SZ.L",
+      "quantity": 5.0,
+      "unit_price": 65.0,
+      "tax_rate": 0.1,
+      "line_total": 325.0
+    },
+    {
+      "description": "LuLaRoe Nicole Dress Size Large 26",
+      "quantity": 2.0,
+      "unit_price": 1.99,
+      "tax_rate": 0.1,
+      "line_total": 3.98
+    },
+    {
+      "description": "Johnny Was Medium Linen Wrap Dress Dessert Rose Embroiderd Bohemian",
+      "quantity": 2.0,
+      "unit_price": 89.99,
+      "tax_rate": 0.1,
+      "line_total": 179.98
+    },
+    {
+      "description": "Eileen Fisher Women's Long Sleeve Fleece Lined Front Pockets Dress XS Gray",
+      "quantity": 2.0,
+      "unit_price": 15.99,
+      "tax_rate": 0.1,
+      "line_total": 31.98
+    },
+    {
+      "description": "Hanna Anderson Women's L Large Coral Short Sleeve Casual Fall Tee Shirt Dress",
+      "quantity": 1.0,
+      "unit_price": 24.0,
+      "tax_rate": 0.1,
+      "line_total": 24.0
+    }
+  ]
+}

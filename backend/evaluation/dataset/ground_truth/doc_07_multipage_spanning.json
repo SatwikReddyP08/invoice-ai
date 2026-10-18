@@ -1,0 +1,70 @@
+{
+  "doc_id": "doc_07_multipage_spanning",
+  "doc_type": "multipage_pdf",
+  "invoice_number": "EHS-2026-9042",
+  "vendor_name": "ENTERPRISE HARDWARE SUPPLIES LTD",
+  "invoice_date": "2026-10-12",
+  "customer_name": "Global Logistics Systems Inc.",
+  "currency": "EUR",
+  "subtotal": 21280.0,
+  "tax_amount": 4256.0,
+  "total_amount": 25536.0,
+  "items": [
+    {
+      "description": "Rackmount Server 2U Xeon Scalable",
+      "quantity": 2.0,
+      "unit_price": 4500.0,
+      "tax_rate": 0.2,
+      "line_total": 9000.0
+    },
+    {
+      "description": "Enterprise SSD 3.84TB NVMe U.2",
+      "quantity": 8.0,
+      "unit_price": 520.0,
+      "tax_rate": 0.2,
+      "line_total": 4160.0
+    },
+    {
+      "description": "64GB DDR5 Registered ECC DIMM",
+      "quantity": 16.0,
+      "unit_price": 210.0,
+      "tax_rate": 0.2,
+      "line_total": 3360.0
+    },
+    {
+      "description": "Dual-Port 25GbE PCIe NIC SFP28",
+      "quantity": 4.0,
+      "unit_price": 380.0,
+      "tax_rate": 0.2,
+      "line_total": 1520.0
+    },
+    {
+      "description": "Redundant 1200W Titanium Hot-Plug PSU",
+      "quantity": 4.0,
+      "unit_price": 290.0,
+      "tax_rate": 0.2,
+      "line_total": 1160.0
+    },
+    {
+      "description": "Cat6A 10Gbps Shielded Patch Cable 2m",
+      "quantity": 20.0,
+      "unit_price": 15.0,
+      "tax_rate": 0.2,
+      "line_total": 300.0
+    },
+    {
+      "description": "24-Port High-Density Patch Panel",
+      "quantity": 2.0,
+      "unit_price": 140.0,
+      "tax_rate": 0.2,
+      "line_total": 280.0
+    },
+    {
+      "description": "Smart Rack PDU Metered 32A IEC",
+      "quantity": 2.0,
+      "unit_price": 750.0,
+      "tax_rate": 0.2,
+      "line_total": 1500.0
+    }
+  ]
+}

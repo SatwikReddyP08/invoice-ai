@@ -1,0 +1,427 @@
+[
+  {
+    "doc_id": "doc_01_digital_tech",
+    "doc_type": "digital_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 0.024,
+    "is_valid_schema": true,
+    "header_accuracy": 0.875,
+    "numeric_error_rate": 0.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 1.0,
+      "invoice_date": 1.0,
+      "subtotal": 1.0,
+      "tax_amount": 1.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 3,
+      "matched_count": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "desc_accuracy": 1.0,
+      "qty_accuracy": 1.0,
+      "unit_price_accuracy": 1.0,
+      "total_accuracy": 1.0
+    },
+    "extracted": {
+      "invoice_number": "Invoice",
+      "vendor_name": "Acme Office Supplies Pvt. Ltd.",
+      "invoice_date": "2026-09-15",
+      "customer_name": "Example Technologies Pvt. Ltd.",
+      "subtotal": 6400.0,
+      "tax_amount": 1152.0,
+      "total_amount": 7552.0,
+      "currency": "INR",
+      "items": [
+        {
+          "description": "Laptop Stand",
+          "quantity": 2.0,
+          "unit_price": 1500.0,
+          "tax_rate": 0.18,
+          "line_total": 3000.0
+        },
+        {
+          "description": "Wireless Keyboard",
+          "quantity": 1.0,
+          "unit_price": 2200.0,
+          "tax_rate": 0.18,
+          "line_total": 2200.0
+        },
+        {
+          "description": "USB-C Cable",
+          "quantity": 3.0,
+          "unit_price": 400.0,
+          "tax_rate": 0.18,
+          "line_total": 1200.0
+        }
+      ]
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_02_digital_ergonomics",
+    "doc_type": "digital_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 0.049,
+    "is_valid_schema": true,
+    "header_accuracy": 0.875,
+    "numeric_error_rate": 0.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 1.0,
+      "invoice_date": 1.0,
+      "subtotal": 1.0,
+      "tax_amount": 1.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "extracted": {
+      "invoice_number": "OFFICIAL",
+      "vendor_name": "Nova Workspace Solutions Pvt. Ltd.",
+      "invoice_date": "2026-09-28",
+      "customer_name": "Apex Digital Systems Pvt. Ltd.",
+      "subtotal": 13000.0,
+      "tax_amount": 2340.0,
+      "total_amount": 15340.0,
+      "currency": "INR",
+      "items": []
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_03_digital_decimals",
+    "doc_type": "digital_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 0.044,
+    "is_valid_schema": true,
+    "header_accuracy": 0.875,
+    "numeric_error_rate": 0.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 1.0,
+      "invoice_date": 1.0,
+      "subtotal": 1.0,
+      "tax_amount": 1.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 3,
+      "matched_count": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "desc_accuracy": 1.0,
+      "qty_accuracy": 1.0,
+      "unit_price_accuracy": 1.0,
+      "total_accuracy": 1.0
+    },
+    "extracted": {
+      "invoice_number": "OFFICIAL",
+      "vendor_name": "Nova Workspace Solutions Pvt. Ltd.",
+      "invoice_date": "2026-12-15",
+      "customer_name": "Apex Digital Systems Pvt. Ltd.",
+      "subtotal": 22750.0,
+      "tax_amount": 4095.0,
+      "total_amount": 26845.0,
+      "currency": "INR",
+      "items": [
+        {
+          "description": "Ergonomic Mouse Pad Memory foam support, anti-slip rubber base",
+          "quantity": 4.0,
+          "unit_price": 1137.5,
+          "tax_rate": 0.18,
+          "line_total": 4550.0
+        },
+        {
+          "description": "HD Web Camera (1080p) Auto-focus wide-angle with dual microphones",
+          "quantity": 2.0,
+          "unit_price": 5950.0,
+          "tax_rate": 0.18,
+          "line_total": 11900.0
+        },
+        {
+          "description": "Multi-Port USB Hub 7-in-1 Type-C aluminum adapter with 4K HDMI",
+          "quantity": 3.0,
+          "unit_price": 2100.0,
+          "tax_rate": 0.18,
+          "line_total": 6300.0
+        }
+      ]
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_04_scanned_raster",
+    "doc_type": "scanned_pdf",
+    "status": "FAILED",
+    "latency_sec": 0.001,
+    "is_valid_schema": false,
+    "header_accuracy": 0.0,
+    "numeric_error_rate": 1.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 0.0,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.0,
+      "subtotal": 0.0,
+      "tax_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "line_items": {
+      "gt_count": 0,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "extracted": null,
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Document parsing returned null or unextractable text"
+    ]
+  },
+  {
+    "doc_id": "doc_05_public_single_item",
+    "doc_type": "public_dataset",
+    "status": "FAILED",
+    "latency_sec": 0.001,
+    "is_valid_schema": false,
+    "header_accuracy": 0.0,
+    "numeric_error_rate": 1.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 0.0,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.0,
+      "subtotal": 0.0,
+      "tax_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "extracted": null,
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Document parsing returned null or unextractable text"
+    ]
+  },
+  {
+    "doc_id": "doc_06_public_multi_item",
+    "doc_type": "public_dataset",
+    "status": "FAILED",
+    "latency_sec": 0.001,
+    "is_valid_schema": false,
+    "header_accuracy": 0.0,
+    "numeric_error_rate": 1.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 0.0,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.0,
+      "subtotal": 0.0,
+      "tax_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "line_items": {
+      "gt_count": 6,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "extracted": null,
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Document parsing returned null or unextractable text"
+    ]
+  },
+  {
+    "doc_id": "doc_07_multipage_spanning",
+    "doc_type": "multipage_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 0.044,
+    "is_valid_schema": true,
+    "header_accuracy": 0.75,
+    "numeric_error_rate": 0.3333,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 1.0,
+      "invoice_date": 1.0,
+      "subtotal": 1.0,
+      "tax_amount": 0.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 8,
+      "pred_count": 7,
+      "matched_count": 7,
+      "precision": 1.0,
+      "recall": 0.875,
+      "f1": 0.9333,
+      "desc_accuracy": 1.0,
+      "qty_accuracy": 1.0,
+      "unit_price_accuracy": 1.0,
+      "total_accuracy": 1.0
+    },
+    "extracted": {
+      "invoice_number": "Invoice",
+      "vendor_name": "ENTERPRISE HARDWARE SUPPLIES LTD",
+      "invoice_date": "2026-10-12",
+      "customer_name": "Global Logistics Systems Inc.",
+      "subtotal": 21280.0,
+      "tax_amount": 2.0,
+      "total_amount": 25536.0,
+      "currency": "EUR",
+      "items": [
+        {
+          "description": "Rackmount Server 2U Xeon Scalable",
+          "quantity": 2.0,
+          "unit_price": 4500.0,
+          "tax_rate": 0.2,
+          "line_total": 9000.0
+        },
+        {
+          "description": "64GB DDR5 Registered ECC DIMM",
+          "quantity": 16.0,
+          "unit_price": 210.0,
+          "tax_rate": 0.2,
+          "line_total": 3360.0
+        },
+        {
+          "description": "Dual-Port 25GbE PCIe NIC SFP28",
+          "quantity": 4.0,
+          "unit_price": 380.0,
+          "tax_rate": 0.2,
+          "line_total": 1520.0
+        },
+        {
+          "description": "Redundant 1200W Titanium Hot-Plug PSU",
+          "quantity": 4.0,
+          "unit_price": 290.0,
+          "tax_rate": 0.2,
+          "line_total": 1160.0
+        },
+        {
+          "description": "Cat6A 10Gbps Shielded Patch Cable 2m",
+          "quantity": 20.0,
+          "unit_price": 15.0,
+          "tax_rate": 0.2,
+          "line_total": 300.0
+        },
+        {
+          "description": "24-Port High-Density Patch Panel",
+          "quantity": 2.0,
+          "unit_price": 140.0,
+          "tax_rate": 0.2,
+          "line_total": 280.0
+        },
+        {
+          "description": "Smart Rack PDU Metered 32A IEC",
+          "quantity": 2.0,
+          "unit_price": 750.0,
+          "tax_rate": 0.2,
+          "line_total": 1500.0
+        }
+      ]
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Header math inconsistency: subtotal (21280.0) + tax (2.0) != total (25536.0)",
+      "Line items sum (17120.00) does not match subtotal (21280.00)"
+    ]
+  },
+  {
+    "doc_id": "doc_08_missing_fields",
+    "doc_type": "missing_fields_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 0.006,
+    "is_valid_schema": true,
+    "header_accuracy": 0.875,
+    "numeric_error_rate": 0.5,
+    "field_scores": {
+      "invoice_number": 1.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 1.0,
+      "invoice_date": 1.0,
+      "subtotal": 0.0,
+      "tax_amount": 1.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "extracted": {
+      "invoice_number": "CS-2026-771",
+      "vendor_name": "FREELANCE CONSULTING SERVICES",
+      "invoice_date": "2026-08-05",
+      "customer_name": null,
+      "subtotal": null,
+      "tax_amount": null,
+      "total_amount": 3750.0,
+      "currency": "USD",
+      "items": []
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  }
+]

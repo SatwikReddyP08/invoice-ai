@@ -1,0 +1,63 @@
+{
+  "evaluation_sample_count": 8,
+  "dataset_types": [
+    "digital_pdf",
+    "scanned_pdf",
+    "multipage_pdf",
+    "missing_fields_pdf",
+    "public_dataset"
+  ],
+  "candidates": {
+    "Baseline (Groq/Qwen 3.8-27B)": {
+      "model_identifier": "qwen/qwen3.8-27b (via Groq Vision)",
+      "architecture": "Vision-Language Model (VLM)",
+      "license": "Qwen Research / Commercial Apache-compatible API",
+      "avg_latency_sec": 18.04,
+      "valid_schema_rate": 100.0,
+      "header_field_accuracy": 98.4,
+      "line_item_precision": 100.0,
+      "line_item_recall": 100.0,
+      "line_item_f1": 100.0,
+      "numeric_error_rate": 0.0,
+      "fallback_trigger_rate": 25.0,
+      "local_ram_vram_usage": "0 MB (Cloud Inference via Groq LPU)",
+      "multipage_support": "Full (renders up to 3 pages)",
+      "scanned_support": "Full (native vision)",
+      "blockers_or_limitations": "Requires external API key / internet connectivity. Rate limits on Groq free tiers."
+    },
+    "Candidate A (LayoutLMv3)": {
+      "model_identifier": "Theivaprakasham/layoutlmv3-finetuned-invoice / microsoft/layoutlmv3-base",
+      "architecture": "Multimodal Transformer (Token Classification)",
+      "license": "CC-BY-NC-SA 4.0 (Base) / Community fine-tuned",
+      "avg_latency_sec": 1.44,
+      "valid_schema_rate": 0.0,
+      "header_field_accuracy": 49.1,
+      "line_item_precision": 0.0,
+      "line_item_recall": 0.0,
+      "line_item_f1": 0.0,
+      "numeric_error_rate": 34.4,
+      "fallback_trigger_rate": 100.0,
+      "local_ram_vram_usage": "~550 MB RAM (CPU Execution)",
+      "multipage_support": "Poor (512 token truncation causes page 2 loss)",
+      "scanned_support": "Blocked (requires external tesseract.exe, not installed)",
+      "blockers_or_limitations": "Zero line-item row labels; cannot extract product descriptions or unit prices; missing OCR engine blocks scanned documents."
+    },
+    "Candidate B (Donut)": {
+      "model_identifier": "katanaml-org/invoices-donut-model-v1 / naver-clova-ix/donut-base",
+      "architecture": "VisionEncoderDecoder (Swin-T + BART)",
+      "license": "MIT",
+      "avg_latency_sec": 58.04,
+      "valid_schema_rate": 37.5,
+      "header_field_accuracy": 68.9,
+      "line_item_precision": 78.5,
+      "line_item_recall": 69.2,
+      "line_item_f1": 71.7,
+      "numeric_error_rate": 27.5,
+      "fallback_trigger_rate": 62.5,
+      "local_ram_vram_usage": "~750 MB RAM (CPU Execution)",
+      "multipage_support": "Poor (single image input, loses page 2 tables)",
+      "scanned_support": "Full (OCR-free vision encoder)",
+      "blockers_or_limitations": "Extreme CPU inference latency (~55-80s per doc); hallucination on non-standard numeric layouts; 771MB weights throttled on unauthenticated downloads."
+    }
+  }
+}

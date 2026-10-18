@@ -1,0 +1,298 @@
+[
+  {
+    "doc_id": "doc_01_digital_tech",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_02_digital_ergonomics",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_03_digital_decimals",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_04_scanned_raster",
+    "doc_type": "scanned_pdf",
+    "status": "BLOCKED",
+    "blocker_reason": "Missing OCR engine (tesseract.exe not found on PATH; PyMuPDF yields 0 text tokens).",
+    "latency_sec": 0.05,
+    "is_valid_schema": false,
+    "header_accuracy": 0.0,
+    "numeric_error_rate": 1.0,
+    "field_scores": {
+      "invoice_number": 0.0,
+      "vendor_name": 0.0,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.0,
+      "subtotal": 0.0,
+      "tax_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "line_items": {
+      "gt_count": 0,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "OCR engine missing for scanned document",
+      "Model inference blocked"
+    ]
+  },
+  {
+    "doc_id": "doc_05_public_single_item",
+    "doc_type": "public_dataset",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_06_public_multi_item",
+    "doc_type": "public_dataset",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 6,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_07_multipage_spanning",
+    "doc_type": "multipage_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 2.8,
+    "is_valid_schema": false,
+    "header_accuracy": 0.3,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 0.75,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 8,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  },
+  {
+    "doc_id": "doc_08_missing_fields",
+    "doc_type": "missing_fields_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 1.45,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6312,
+    "numeric_error_rate": 0.25,
+    "field_scores": {
+      "invoice_number": 0.85,
+      "vendor_name": 0.8,
+      "customer_name": 0.0,
+      "currency": 0.0,
+      "invoice_date": 0.8,
+      "subtotal": 0.75,
+      "tax_amount": 1.0,
+      "total_amount": 0.85
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "desc_accuracy": 0.0,
+      "qty_accuracy": 0.0,
+      "unit_price_accuracy": 0.0,
+      "total_accuracy": 0.0
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Schema validation failed: line items table missing",
+      "Customer name not supported by token vocabulary",
+      "Currency code not supported"
+    ]
+  }
+]

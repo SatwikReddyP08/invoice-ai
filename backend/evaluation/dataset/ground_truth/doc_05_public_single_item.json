@@ -1,0 +1,21 @@
+{
+  "doc_id": "doc_05_public_single_item",
+  "doc_type": "public_dataset",
+  "invoice_number": "97159829",
+  "vendor_name": "Bradley-Andrade",
+  "invoice_date": "2015-09-18",
+  "customer_name": "Castro PLC",
+  "currency": "USD",
+  "subtotal": 889.2,
+  "tax_amount": 88.92,
+  "total_amount": 978.12,
+  "items": [
+    {
+      "description": "12\" Marble Lapis Inlay Chess Table Top With 2\" Pieces & 15\" Wooden Stand W537",
+      "quantity": 2.0,
+      "unit_price": 444.6,
+      "tax_rate": 0.1,
+      "line_total": 889.2
+    }
+  ]
+}

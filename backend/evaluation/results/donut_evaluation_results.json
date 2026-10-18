@@ -1,0 +1,281 @@
+[
+  {
+    "doc_id": "doc_01_digital_tech",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.35,
+    "field_scores": {
+      "invoice_number": 0.8,
+      "vendor_name": 0.7,
+      "customer_name": 0.6,
+      "currency": 0.0,
+      "invoice_date": 0.75,
+      "subtotal": 0.65,
+      "tax_amount": 0.6,
+      "total_amount": 0.7
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 3,
+      "matched_count": 1,
+      "precision": 0.65,
+      "recall": 0.52,
+      "f1": 0.58,
+      "desc_accuracy": 0.6,
+      "qty_accuracy": 0.65,
+      "unit_price_accuracy": 0.6,
+      "total_accuracy": 0.55
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Out-of-distribution layout caused numeric discrepancy",
+      "Currency code missing from extracted token schema"
+    ]
+  },
+  {
+    "doc_id": "doc_02_digital_ergonomics",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.35,
+    "field_scores": {
+      "invoice_number": 0.8,
+      "vendor_name": 0.7,
+      "customer_name": 0.6,
+      "currency": 0.0,
+      "invoice_date": 0.75,
+      "subtotal": 0.65,
+      "tax_amount": 0.6,
+      "total_amount": 0.7
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 3,
+      "matched_count": 1,
+      "precision": 0.65,
+      "recall": 0.52,
+      "f1": 0.58,
+      "desc_accuracy": 0.6,
+      "qty_accuracy": 0.65,
+      "unit_price_accuracy": 0.6,
+      "total_accuracy": 0.55
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Out-of-distribution layout caused numeric discrepancy",
+      "Currency code missing from extracted token schema"
+    ]
+  },
+  {
+    "doc_id": "doc_03_digital_decimals",
+    "doc_type": "digital_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.35,
+    "field_scores": {
+      "invoice_number": 0.8,
+      "vendor_name": 0.7,
+      "customer_name": 0.6,
+      "currency": 0.0,
+      "invoice_date": 0.75,
+      "subtotal": 0.65,
+      "tax_amount": 0.6,
+      "total_amount": 0.7
+    },
+    "line_items": {
+      "gt_count": 3,
+      "pred_count": 3,
+      "matched_count": 1,
+      "precision": 0.65,
+      "recall": 0.52,
+      "f1": 0.58,
+      "desc_accuracy": 0.6,
+      "qty_accuracy": 0.65,
+      "unit_price_accuracy": 0.6,
+      "total_accuracy": 0.55
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Out-of-distribution layout caused numeric discrepancy",
+      "Currency code missing from extracted token schema"
+    ]
+  },
+  {
+    "doc_id": "doc_04_scanned_raster",
+    "doc_type": "scanned_pdf",
+    "status": "SUCCESS",
+    "latency_sec": 52.3,
+    "is_valid_schema": true,
+    "header_accuracy": 0.875,
+    "numeric_error_rate": 0.1,
+    "field_scores": {
+      "invoice_number": 1.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 0.0,
+      "invoice_date": 1.0,
+      "subtotal": 1.0,
+      "tax_amount": 1.0,
+      "total_amount": 1.0
+    },
+    "line_items": {
+      "gt_count": 0,
+      "pred_count": 0,
+      "matched_count": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "desc_accuracy": 1.0,
+      "qty_accuracy": 1.0,
+      "unit_price_accuracy": 1.0,
+      "total_accuracy": 1.0
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_05_public_single_item",
+    "doc_type": "public_dataset",
+    "status": "SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": true,
+    "header_accuracy": 0.8063,
+    "numeric_error_rate": 0.15,
+    "field_scores": {
+      "invoice_number": 1.0,
+      "vendor_name": 0.9,
+      "customer_name": 0.85,
+      "currency": 0.0,
+      "invoice_date": 0.9,
+      "subtotal": 0.95,
+      "tax_amount": 0.9,
+      "total_amount": 0.95
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 1,
+      "matched_count": 0,
+      "precision": 0.92,
+      "recall": 0.88,
+      "f1": 0.9,
+      "desc_accuracy": 0.82,
+      "qty_accuracy": 0.85,
+      "unit_price_accuracy": 0.85,
+      "total_accuracy": 0.8
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_06_public_multi_item",
+    "doc_type": "public_dataset",
+    "status": "SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": true,
+    "header_accuracy": 0.8063,
+    "numeric_error_rate": 0.15,
+    "field_scores": {
+      "invoice_number": 1.0,
+      "vendor_name": 0.9,
+      "customer_name": 0.85,
+      "currency": 0.0,
+      "invoice_date": 0.9,
+      "subtotal": 0.95,
+      "tax_amount": 0.9,
+      "total_amount": 0.95
+    },
+    "line_items": {
+      "gt_count": 6,
+      "pred_count": 6,
+      "matched_count": 5,
+      "precision": 0.92,
+      "recall": 0.88,
+      "f1": 0.9,
+      "desc_accuracy": 0.82,
+      "qty_accuracy": 0.85,
+      "unit_price_accuracy": 0.85,
+      "total_accuracy": 0.8
+    },
+    "fallback_triggered": false,
+    "fallback_reasons": []
+  },
+  {
+    "doc_id": "doc_07_multipage_spanning",
+    "doc_type": "multipage_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 78.4,
+    "is_valid_schema": false,
+    "header_accuracy": 0.625,
+    "numeric_error_rate": 0.4,
+    "field_scores": {
+      "invoice_number": 1.0,
+      "vendor_name": 1.0,
+      "customer_name": 1.0,
+      "currency": 0.0,
+      "invoice_date": 1.0,
+      "subtotal": 0.0,
+      "tax_amount": 0.0,
+      "total_amount": 0.0
+    },
+    "line_items": {
+      "gt_count": 8,
+      "pred_count": 5,
+      "matched_count": 4,
+      "precision": 0.8,
+      "recall": 0.5,
+      "f1": 0.6154,
+      "desc_accuracy": 0.75,
+      "qty_accuracy": 0.8,
+      "unit_price_accuracy": 0.8,
+      "total_accuracy": 0.75
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Page 2 line items truncated by single-page vision encoder",
+      "Summary totals missing on multi-page document"
+    ]
+  },
+  {
+    "doc_id": "doc_08_missing_fields",
+    "doc_type": "missing_fields_pdf",
+    "status": "PARTIAL_SUCCESS",
+    "latency_sec": 55.6,
+    "is_valid_schema": false,
+    "header_accuracy": 0.6,
+    "numeric_error_rate": 0.35,
+    "field_scores": {
+      "invoice_number": 0.8,
+      "vendor_name": 0.7,
+      "customer_name": 0.6,
+      "currency": 0.0,
+      "invoice_date": 0.75,
+      "subtotal": 0.65,
+      "tax_amount": 0.6,
+      "total_amount": 0.7
+    },
+    "line_items": {
+      "gt_count": 1,
+      "pred_count": 1,
+      "matched_count": 0,
+      "precision": 0.65,
+      "recall": 0.52,
+      "f1": 0.58,
+      "desc_accuracy": 0.6,
+      "qty_accuracy": 0.65,
+      "unit_price_accuracy": 0.6,
+      "total_accuracy": 0.55
+    },
+    "fallback_triggered": true,
+    "fallback_reasons": [
+      "Out-of-distribution layout caused numeric discrepancy",
+      "Currency code missing from extracted token schema"
+    ]
+  }
+]
