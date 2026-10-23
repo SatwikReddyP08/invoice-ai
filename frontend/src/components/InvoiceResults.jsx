@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './InvoiceResults.css';
+import { API_BASE } from '../apiConfig';
 
 const InvoiceResults = ({
   data,
@@ -37,7 +38,7 @@ const InvoiceResults = ({
     setIsSubmitting(true);
     setSubmitMessage(null);
     try {
-      const res = await fetch(`/api/v1/invoices/${currentData.id}/disposition`, {
+      const res = await fetch(`${API_BASE}/api/v1/invoices/${currentData.id}/disposition`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ disposition, notes })
@@ -62,7 +63,7 @@ const InvoiceResults = ({
   const handleDownloadReport = async () => {
     setIsDownloading(true);
     try {
-      const res = await fetch(`/api/v1/invoices/${currentData.id}/report`);
+      const res = await fetch(`${API_BASE}/api/v1/invoices/${currentData.id}/report`);
       if (!res.ok) throw new Error('Failed to generate review audit report');
       const reportData = await res.json();
       const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });

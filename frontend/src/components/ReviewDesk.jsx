@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ReviewDesk.css';
+import { API_BASE } from '../apiConfig';
 
 const ReviewDesk = ({ onSelectInvoice, activeFilter = 'needs_attention', onFilterChange }) => {
   const [filter, setFilter] = useState(activeFilter);
@@ -16,7 +17,7 @@ const ReviewDesk = ({ onSelectInvoice, activeFilter = 'needs_attention', onFilte
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/v1/invoices/?review_filter=${filter}&limit=100`);
+      const res = await fetch(`${API_BASE}/api/v1/invoices/?review_filter=${filter}&limit=100`);
       if (!res.ok) throw new Error('Failed to load review queue');
       const data = await res.json();
       setInvoices(data.items || []);
@@ -59,7 +60,7 @@ const ReviewDesk = ({ onSelectInvoice, activeFilter = 'needs_attention', onFilte
   const handleDownloadReport = async (inv, e) => {
     e.stopPropagation();
     try {
-      const res = await fetch(`/api/v1/invoices/${inv.id}/report`);
+      const res = await fetch(`${API_BASE}/api/v1/invoices/${inv.id}/report`);
       if (!res.ok) throw new Error('Failed to generate report');
       const reportData = await res.json();
       const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });

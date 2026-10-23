@@ -3,6 +3,7 @@ import './App.css';
 import UploadInvoice from './components/UploadInvoice';
 import ReviewDesk from './components/ReviewDesk';
 import InvoiceResults from './components/InvoiceResults';
+import { API_BASE } from './apiConfig';
 
 function App() {
   const [activeTab, setActiveTab] = useState('process'); // 'process' | 'review_desk'
@@ -26,7 +27,7 @@ function App() {
         if (id && (!currentInv || currentInv.id !== parseInt(id, 10))) {
           setIsLoadingInvoice(true);
           try {
-            const res = await fetch(`/api/v1/invoices/${id}`);
+            const res = await fetch(`${API_BASE}/api/v1/invoices/${id}`);
             if (res.ok) {
               const inv = await res.json();
               setSelectedInvoice(inv);

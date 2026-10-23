@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './UploadInvoice.css';
 import InvoiceResults from './InvoiceResults';
+import { API_BASE } from '../apiConfig';
 
 const UploadInvoice = ({ onInvoiceProcessed }) => {
   const [file, setFile] = useState(null);
@@ -91,7 +92,7 @@ const UploadInvoice = ({ onInvoiceProcessed }) => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('/api/v1/invoices/upload', {
+      const response = await fetch(`${API_BASE}/api/v1/invoices/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -119,7 +120,7 @@ const UploadInvoice = ({ onInvoiceProcessed }) => {
     setExtractionError(null);
 
     try {
-      const response = await fetch(`/api/v1/invoices/${successData.invoice_id}/extract`, {
+      const response = await fetch(`${API_BASE}/api/v1/invoices/${successData.invoice_id}/extract`, {
         method: 'POST'
       });
 

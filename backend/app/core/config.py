@@ -1,19 +1,30 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
+from typing import Optional, List
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "AI Invoice Processing System"
     API_V1_STR: str = "/api/v1"
 
     # Database configuration
+    DATABASE_URL: Optional[str] = None
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_USER: str = "invoice_app"
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = "invoice_db"
     POSTGRES_PORT: int = 5432
 
+    # CORS configuration
+    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:
+        if self.DATABASE_URL:
+            url = self.DATABASE_URL
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            return url
         if self.POSTGRES_PASSWORD:
             return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         return f"postgresql://{self.POSTGRES_USER}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
